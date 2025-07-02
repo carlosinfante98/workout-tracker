@@ -38,9 +38,27 @@ def plot_scores(df: pd.DataFrame) -> None:
             'yaxis': 'Score Cumulé',
             'xaxis': 'Date',
         },
+        'it': {
+            'title': 'Progressione dei Punteggi nel Tempo',
+            'legend': 'Giocatore',
+            'yaxis': 'Punteggio Cumulativo',
+            'xaxis': 'Data',
+        },
+        'de': {
+            'title': 'Punktentwicklung im Zeitverlauf',
+            'legend': 'Spieler',
+            'yaxis': 'Kumulierte Punktzahl',
+            'xaxis': 'Datum',
+        },
+        'pt': {
+            'title': 'Progresso da Pontuação ao Longo do Tempo',
+            'legend': 'Jogador',
+            'yaxis': 'Pontuação Acumulada',
+            'xaxis': 'Data',
+        },
     }
-    lang_codes = ['en', 'es', 'fr']
-    lang_names = ['English', 'Español', 'Français']
+    lang_codes = ['en', 'es', 'fr', 'it', 'de', 'pt']
+    lang_names = ['English', 'Español', 'Français', 'Italiano', 'Deutsch', 'Português']
     # Initial language
     lang = 'en'
     fig = go.Figure()
@@ -86,7 +104,7 @@ def plot_scores(df: pd.DataFrame) -> None:
                         'xaxis.tickvals': tickvals,
                         'xaxis.tickformat': '%Y-%m-%d',
                         'xaxis.tickangle': 45,
-                        'legend_title_text': translations[code]['legend']
+                        'legend.title.text': translations[code]['legend']
                     }],
                     label=lang_names[i],
                     method='relayout',
@@ -109,9 +127,9 @@ def plot_scores(df: pd.DataFrame) -> None:
         ),
         yaxis=dict(title=dict(text=translations[lang]['yaxis'])),
         title=dict(text=translations[lang]['title']),
-        legend_title_text=translations[lang]['legend'],
+        legend=dict(title=dict(text=translations[lang]['legend'])),
         hovermode='x unified',
         margin=dict(l=40, r=40, t=60, b=80),
         updatemenus=updatemenus
     )
-    pio.write_html(fig, file='scoreboard.html', auto_open=True)
+    pio.write_html(fig, file='scoreboard.html', auto_open=True, config={'displayModeBar': False})
