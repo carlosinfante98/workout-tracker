@@ -31,7 +31,6 @@ services:
   - type: web
     name: workout-tracker-frontend
     runtime: static
-    plan: free
     buildCommand: cd client && npm install && npm run build
     staticPublishPath: client/dist
     envVars:
