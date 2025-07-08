@@ -1,20 +1,13 @@
 services:
-  # PostgreSQL Database
-  - type: pserv
-    name: workout-tracker-db
-    plan: free
-    region: oregon
-    databaseName: workout_tracker
-    user: postgres
-
   # Node.js Backend
   - type: web
     name: workout-tracker-backend
     runtime: node
     plan: free
     region: oregon
-    buildCommand: cd server && npm install && npx prisma generate
-    startCommand: cd server && npx prisma migrate deploy && npm start
+    buildCommand: npm install
+    startCommand: npx prisma migrate deploy && npx prisma generate && npm start
+    rootDir: server
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
@@ -46,8 +39,10 @@ services:
       - key: VITE_API_URL
         value: https://workout-tracker-backend.onrender.com/api
 
-  # Optional: Redis for caching (free tier)
-  - type: redis
-    name: workout-tracker-cache
+# PostgreSQL Database
+databases:
+  - name: workout-tracker-db
+    databaseName: workout_tracker
+    user: postgres
     plan: free
     region: oregon
