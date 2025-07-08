@@ -32,7 +32,6 @@ services:
     name: workout-tracker-frontend
     runtime: static
     plan: free
-    region: oregon
     buildCommand: cd client && npm install && npm run build
     staticPublishPath: client/dist
     envVars:
@@ -43,6 +42,5 @@ services:
 databases:
   - name: workout-tracker-db
     databaseName: workout_tracker
-    user: postgres
     plan: free
     region: oregon
