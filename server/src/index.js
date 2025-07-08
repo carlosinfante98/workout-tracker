@@ -23,10 +23,22 @@ const limiter = rateLimit({
   message: "Too many requests from this IP, please try again later.",
 });
 
-// Middleware
+// Basic middleware (before rate limiting)
 app.use(helmet());
 app.use(compression());
 app.use(morgan("combined"));
+
+// Health check (BEFORE rate limiting to avoid blocking health checks)
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "healthy",
+    message: "Workout Tracker API is running",
+    timestamp: new Date().toISOString(),
+    version: "1.0.0",
+  });
+});
+
+// Apply rate limiting AFTER health check
 app.use(limiter);
 app.use(
   cors({
@@ -36,16 +48,6 @@ app.use(
 );
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
-
-// Health check
-app.get("/health", (req, res) => {
-  res.status(200).json({
-    status: "healthy",
-    message: "Workout Tracker API is running",
-    timestamp: new Date().toISOString(),
-    version: "1.0.0",
-  });
-});
 
 // API routes
 app.use("/api/auth", authRoutes);
