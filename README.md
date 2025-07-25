@@ -417,3 +417,4 @@ For support, email support@workouttracker.com or join our Slack channel.
 
 **Happy Tracking! 🏋️‍♂️💪**
 # Trigger redeploy for environment variables
+# Force redeploy for auth fix
