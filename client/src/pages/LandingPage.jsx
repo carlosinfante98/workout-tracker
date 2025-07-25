@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Activity, Users, Trophy, TrendingUp, Play } from "lucide-react";
-import { useAuthStore } from "../store/authStore";
+import useAuthStore from "../store/authStore";
 import AuthModal from "../components/auth/AuthModal";
 import Button from "../components/ui/Button";
 

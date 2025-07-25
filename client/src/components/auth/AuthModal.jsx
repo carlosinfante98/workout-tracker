@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useAuthStore } from "../../store/authStore";
+import useAuthStore from "../../store/authStore";
 import Modal from "../ui/Modal";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
@@ -8,14 +8,13 @@ const AuthModal = ({ isOpen, onClose }) => {
   const [mode, setMode] = useState("login"); // 'login' or 'register'
   const [formData, setFormData] = useState({
     email: "",
-    username: "",
     fullName: "",
     password: "",
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
 
-  const { login, register, isLoading } = useAuthStore();
+  const { login, register, loading } = useAuthStore();
 
   // Debug modal lifecycle (can be removed in production)
   useEffect(() => {
@@ -43,19 +42,29 @@ const AuthModal = ({ isOpen, onClose }) => {
   const validateForm = () => {
     const newErrors = {};
 
+    // Email validation
+    if (!formData.email) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    // Register-specific validation
     if (mode === "register") {
-      if (!formData.email) newErrors.email = "Email is required";
-      if (!formData.fullName) newErrors.fullName = "Full name is required";
-      if (!formData.password || formData.password.length < 6) {
-        newErrors.password = "Password must be at least 6 characters";
+      if (!formData.fullName) {
+        newErrors.fullName = "Full name is required";
       }
       if (formData.password !== formData.confirmPassword) {
         newErrors.confirmPassword = "Passwords do not match";
       }
     }
-
-    if (!formData.username) newErrors.username = "Username is required";
-    if (!formData.password) newErrors.password = "Password is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -69,10 +78,7 @@ const AuthModal = ({ isOpen, onClose }) => {
     }
 
     if (mode === "login") {
-      const result = await login({
-        username: formData.username,
-        password: formData.password,
-      });
+      const result = await login(formData.email, formData.password);
 
       if (result.success) {
         // Clear errors only on success
@@ -89,37 +95,30 @@ const AuthModal = ({ isOpen, onClose }) => {
         });
       }
     } else {
-      const result = await register({
-        email: formData.email,
-        username: formData.username,
-        fullName: formData.fullName,
-        password: formData.password,
-      });
+      const result = await register(
+        formData.email,
+        formData.password,
+        formData.fullName
+      );
 
       if (result.success) {
-        // Clear errors and prepare for welcome on dashboard
+        // Clear errors
         setErrors({});
 
-        // Store welcome info for dashboard
-        localStorage.setItem("showWelcome", "true");
-        localStorage.setItem(
-          "welcomeUserName",
-          formData.fullName || formData.username
-        );
-
-        // Auto-login with the credentials they just registered with
-        const loginResult = await login({
-          username: formData.username,
-          password: formData.password,
-        });
-
-        if (loginResult.success) {
-          // Close modal and redirect - welcome will show on dashboard
-          onClose();
-          resetForm();
+        // Check if email confirmation is required
+        if (result.message) {
+          // Email confirmation required
+          setErrors({
+            submit: result.message,
+          });
+          // Don't close modal, let user know to check email
         } else {
-          // If auto-login fails, switch to login mode
-          setMode("login");
+          // Auto-login successful, store welcome info
+          localStorage.setItem("showWelcome", "true");
+          localStorage.setItem("welcomeUserName", formData.fullName);
+
+          // Close modal and redirect
+          onClose();
           resetForm();
         }
       } else {
@@ -134,7 +133,6 @@ const AuthModal = ({ isOpen, onClose }) => {
   const resetForm = () => {
     setFormData({
       email: "",
-      username: "",
       fullName: "",
       password: "",
       confirmPassword: "",
@@ -159,36 +157,26 @@ const AuthModal = ({ isOpen, onClose }) => {
       canClose={canCloseModal}
     >
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-        {mode === "register" && (
-          <>
-            <Input
-              label="Email"
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              error={errors.email}
-              required
-            />
-            <Input
-              label="Full Name"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleInputChange}
-              error={errors.fullName}
-              required
-            />
-          </>
-        )}
-
         <Input
-          label="Username"
-          name="username"
-          value={formData.username}
+          label="Email"
+          type="email"
+          name="email"
+          value={formData.email}
           onChange={handleInputChange}
-          error={errors.username}
+          error={errors.email}
           required
         />
+
+        {mode === "register" && (
+          <Input
+            label="Full Name"
+            name="fullName"
+            value={formData.fullName}
+            onChange={handleInputChange}
+            error={errors.fullName}
+            required
+          />
+        )}
 
         <Input
           label="Password"
@@ -214,23 +202,37 @@ const AuthModal = ({ isOpen, onClose }) => {
 
         {/* Display submission errors */}
         {errors.submit && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-sm text-red-600 font-medium">
-              {errors.submit === "Invalid credentials"
-                ? "That username and password don't match. Double-check your login details and try again."
+          <div
+            className={`p-3 border rounded-md ${
+              errors.submit.includes("check your email")
+                ? "bg-blue-50 border-blue-200"
+                : "bg-red-50 border-red-200"
+            }`}
+          >
+            <p
+              className={`text-sm font-medium ${
+                errors.submit.includes("check your email")
+                  ? "text-blue-600"
+                  : "text-red-600"
+              }`}
+            >
+              {errors.submit === "Invalid login credentials"
+                ? "That email and password don't match. Double-check your login details and try again."
                 : errors.submit}
             </p>
-            <p className="text-xs text-red-500 mt-1">
-              Forgot your password? You can reset it once we add that feature.
-            </p>
+            {!errors.submit.includes("check your email") && (
+              <p className="text-xs text-red-500 mt-1">
+                Forgot your password? You can reset it once we add that feature.
+              </p>
+            )}
           </div>
         )}
 
         <Button
           type="submit"
           className="w-full"
-          loading={isLoading}
-          disabled={isLoading}
+          loading={loading}
+          disabled={loading}
         >
           {mode === "login" ? "Sign In" : "Create Account"}
         </Button>

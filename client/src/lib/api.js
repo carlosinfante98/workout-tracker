@@ -1,23 +1,21 @@
 import axios from "axios";
-
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+import useAuthStore from "../store/authStore";
 
 // Create axios instance
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_URL || "/api",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Request interceptor to add auth token
+// Add auth interceptor
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const authHeaders = useAuthStore.getState().getAuthHeader();
+    if (authHeaders.Authorization) {
+      config.headers.Authorization = authHeaders.Authorization;
     }
     return config;
   },
@@ -26,45 +24,39 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle errors
+// Add response interceptor for error handling
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    return response;
+  },
   (error) => {
-    // Only redirect on 401 if it's NOT a login/register request
     if (error.response?.status === 401) {
-      const isAuthRequest =
-        error.config?.url?.includes("/auth/login") ||
-        error.config?.url?.includes("/auth/register");
-
-      if (!isAuthRequest) {
-        // Token expired or invalid for authenticated requests
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        window.location.href = "/";
-      }
+      // Token expired or invalid
+      useAuthStore.getState().logout();
     }
     return Promise.reject(error);
   }
 );
 
-// Auth API functions
-export const authAPI = {
-  register: (userData) => api.post("/auth/register", userData),
-  login: (credentials) => api.post("/auth/login", credentials),
-  getProfile: () => api.get("/auth/profile"),
-};
-
-// Workout API functions
+// API endpoints
 export const workoutAPI = {
-  create: (workoutData) => api.post("/workouts", workoutData),
-  getAll: (params) => api.get("/workouts", { params }),
+  // Get all workouts with pagination
+  getWorkouts: (params = {}) => api.get("/workouts", { params }),
+
+  // Create new workout
+  createWorkout: (data) => api.post("/workouts", data),
+
+  // Get workout statistics
   getStats: () => api.get("/workouts/stats"),
-  getMonthlyData: (months) => api.get(`/workouts/monthly?months=${months}`),
+
+  // Get monthly data
+  getMonthlyData: (params = {}) => api.get("/workouts/monthly", { params }),
+
+  // Get dashboard data
   getDashboard: () => api.get("/workouts/dashboard"),
 };
 
 // Health check
-export const healthCheck = () =>
-  axios.get(`${API_BASE_URL.replace("/api", "")}/health`);
+export const healthCheck = () => api.get("/health");
 
 export default api;

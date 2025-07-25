@@ -1,6 +1,6 @@
 import React from "react";
 import { Activity, LogOut, User } from "lucide-react";
-import { useAuthStore } from "../../store/authStore";
+import useAuthStore from "../../store/authStore";
 import Button from "../ui/Button";
 
 const Navbar = () => {

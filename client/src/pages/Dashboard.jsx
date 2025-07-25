@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Activity, Clock, Zap, Target, Calendar } from "lucide-react";
 import { useWorkoutStore } from "../store/workoutStore";
-import { useAuthStore } from "../store/authStore";
+import useAuthStore from "../store/authStore";
 import Navbar from "../components/dashboard/Navbar";
 import StatsCard from "../components/dashboard/StatsCard";
 import WorkoutForm from "../components/dashboard/WorkoutForm";
