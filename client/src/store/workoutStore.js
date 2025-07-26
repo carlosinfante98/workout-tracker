@@ -81,25 +81,53 @@ export const useWorkoutStore = create((set, get) => ({
   },
 
   createWorkout: async (workoutData) => {
-    set({ isLoading: true, error: null });
+    set({ error: null }); // Don't set loading to true to avoid blank screen
     try {
       const response = await workoutAPI.createWorkout(workoutData);
       const newWorkout = response.data.workout;
 
-      // Add to current workouts list
-      const currentWorkouts = get().workouts;
+      // Optimistic update: immediately update UI without loading state
+      const currentState = get();
+      const currentWorkouts = currentState.workouts || [];
+      const currentStats = currentState.stats || {};
+
+      // Add new workout to the beginning of the list
+      const updatedWorkouts = [newWorkout, ...currentWorkouts.slice(0, 19)];
+
+      // Update stats optimistically
+      const updatedStats = {
+        ...currentStats,
+        totalWorkouts: (currentStats.totalWorkouts || 0) + 1,
+        totalDuration:
+          (currentStats.totalDuration || 0) + newWorkout.durationMinutes,
+        avgDuration: Math.round(
+          ((currentStats.totalDuration || 0) + newWorkout.durationMinutes) /
+            ((currentStats.totalWorkouts || 0) + 1)
+        ),
+      };
+
+      // Update workout types count
+      if (currentStats.workoutTypes) {
+        updatedStats.workoutTypes = {
+          ...currentStats.workoutTypes,
+          [newWorkout.workoutType]:
+            (currentStats.workoutTypes[newWorkout.workoutType] || 0) + 1,
+        };
+      }
+
+      // Update state immediately for smooth UX
       set({
-        workouts: [newWorkout, ...currentWorkouts.slice(0, 19)], // Keep only 20 most recent
-        isLoading: false,
+        workouts: updatedWorkouts,
+        stats: updatedStats,
       });
 
-      // Refresh stats
-      get().fetchStats();
+      // Refresh monthly data in background (no loading state)
+      get().fetchMonthlyData().catch(console.error);
 
       return { success: true, workout: newWorkout };
     } catch (error) {
       const errorMessage = error.message || "Failed to create workout";
-      set({ error: errorMessage, isLoading: false });
+      set({ error: errorMessage });
       return { success: false, error: errorMessage };
     }
   },
