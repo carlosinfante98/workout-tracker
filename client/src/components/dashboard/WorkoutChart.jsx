@@ -125,7 +125,12 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
             if (type === "doughnut") {
               return `${context.label}: ${context.parsed} workouts`;
             }
-            return `${context.dataset.label}: ${context.parsed}`;
+            // For bar charts, format properly
+            const value = context.parsed.y || context.parsed;
+            if (context.dataset.label.includes("Duration")) {
+              return `${context.dataset.label}: ${value} hours`;
+            }
+            return `${context.dataset.label}: ${value} workouts`;
           },
         },
       },
