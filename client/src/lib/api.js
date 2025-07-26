@@ -8,9 +8,20 @@ export const workoutAPI = {
     const { page = 1, limit = 20 } = params;
     const offset = (page - 1) * limit;
 
+    // Get current user
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      throw new Error("User not authenticated");
+    }
+
     const { data: workouts, error } = await supabase
       .from("workouts")
       .select("*")
+      .eq("user_id", user.id) // Filter by current user
       .order("workout_date", { ascending: false })
       .range(offset, offset + limit - 1);
 
@@ -28,10 +39,11 @@ export const workoutAPI = {
         updatedAt: workout.updated_at,
       })) || [];
 
-    // Get total count
+    // Get total count for current user
     const { count, error: countError } = await supabase
       .from("workouts")
-      .select("*", { count: "exact", head: true });
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id);
 
     if (countError) throw countError;
 
@@ -107,9 +119,20 @@ export const workoutAPI = {
 
   // Get workout statistics
   getStats: async () => {
+    // Get current user
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      throw new Error("User not authenticated");
+    }
+
     const { data: workouts, error } = await supabase
       .from("workouts")
-      .select("*");
+      .select("*")
+      .eq("user_id", user.id); // Filter by current user
 
     if (error) throw error;
 
@@ -220,9 +243,20 @@ export const workoutAPI = {
 
   // Get monthly data
   getMonthlyData: async (params = {}) => {
+    // Get current user
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      throw new Error("User not authenticated");
+    }
+
     const { data: workouts, error } = await supabase
       .from("workouts")
       .select("*")
+      .eq("user_id", user.id) // Filter by current user
       .order("workout_date", { ascending: true });
 
     if (error) throw error;
