@@ -51,7 +51,7 @@ export const useWorkoutStore = create((set, get) => ({
   fetchMonthlyData: async (months = 6) => {
     try {
       const response = await workoutAPI.getMonthlyData(months);
-      set({ monthlyData: response.data.monthlyData });
+      set({ monthlyData: response.data });
     } catch (error) {
       console.error("Failed to fetch monthly data:", error);
     }
@@ -60,13 +60,17 @@ export const useWorkoutStore = create((set, get) => ({
   fetchDashboardData: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await workoutAPI.getDashboard();
-      const { recentWorkouts, stats, monthlyData } = response.data;
+      const [dashboardResponse, monthlyResponse] = await Promise.all([
+        workoutAPI.getDashboard(),
+        workoutAPI.getMonthlyData(),
+      ]);
+
+      const { recentWorkouts, stats } = dashboardResponse.data;
 
       set({
         workouts: recentWorkouts,
         stats,
-        monthlyData,
+        monthlyData: monthlyResponse.data,
         isLoading: false,
       });
     } catch (error) {

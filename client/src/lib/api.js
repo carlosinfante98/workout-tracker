@@ -113,13 +113,27 @@ export const workoutAPI = {
 
     if (error) throw error;
 
+    if (!workouts || workouts.length === 0) {
+      return {
+        data: {
+          totalWorkouts: 0,
+          totalDuration: 0,
+          avgDuration: 0,
+          thisWeekWorkouts: 0,
+          currentStreak: 0,
+          longestStreak: 0,
+          workoutTypes: [],
+        },
+      };
+    }
+
     const totalWorkouts = workouts.length;
-    const totalMinutes = workouts.reduce(
+    const totalDuration = workouts.reduce(
       (sum, w) => sum + w.duration_minutes,
       0
     );
     const avgDuration =
-      totalWorkouts > 0 ? Math.round(totalMinutes / totalWorkouts) : 0;
+      totalWorkouts > 0 ? Math.round(totalDuration / totalWorkouts) : 0;
 
     // Get this week's workouts
     const oneWeekAgo = new Date();
@@ -128,12 +142,78 @@ export const workoutAPI = {
       (w) => new Date(w.workout_date) >= oneWeekAgo
     );
 
+    // Calculate streaks
+    const sortedWorkouts = workouts
+      .map((w) => new Date(w.workout_date).toDateString())
+      .sort((a, b) => new Date(b) - new Date(a)); // Most recent first
+
+    const uniqueDates = [...new Set(sortedWorkouts)];
+
+    // Calculate current streak
+    let currentStreak = 0;
+    const today = new Date().toDateString();
+    const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString();
+
+    // Start from today or yesterday
+    let startDate = uniqueDates.includes(today)
+      ? today
+      : uniqueDates.includes(yesterday)
+      ? yesterday
+      : null;
+
+    if (startDate) {
+      let checkDate = new Date(startDate);
+      currentStreak = 1;
+
+      for (let i = 1; i < uniqueDates.length; i++) {
+        checkDate.setDate(checkDate.getDate() - 1);
+        const expectedDate = checkDate.toDateString();
+
+        if (uniqueDates.includes(expectedDate)) {
+          currentStreak++;
+        } else {
+          break;
+        }
+      }
+    }
+
+    // Calculate longest streak
+    let longestStreak = 0;
+    let tempStreak = 1;
+
+    for (let i = 1; i < uniqueDates.length; i++) {
+      const currentDate = new Date(uniqueDates[i]);
+      const previousDate = new Date(uniqueDates[i - 1]);
+      const dayDiff = (previousDate - currentDate) / (1000 * 60 * 60 * 24);
+
+      if (dayDiff === 1) {
+        tempStreak++;
+      } else {
+        longestStreak = Math.max(longestStreak, tempStreak);
+        tempStreak = 1;
+      }
+    }
+    longestStreak = Math.max(longestStreak, tempStreak);
+
+    // Calculate workout types distribution
+    const workoutTypeCounts = {};
+    workouts.forEach((w) => {
+      workoutTypeCounts[w.workout_type] =
+        (workoutTypeCounts[w.workout_type] || 0) + 1;
+    });
+
+    // Return as object for doughnut chart compatibility
+    const workoutTypes = workoutTypeCounts;
+
     return {
       data: {
         totalWorkouts,
-        totalMinutes,
+        totalDuration,
         avgDuration,
         thisWeekWorkouts: thisWeekWorkouts.length,
+        currentStreak,
+        longestStreak,
+        workoutTypes,
       },
     };
   },
@@ -147,19 +227,37 @@ export const workoutAPI = {
 
     if (error) throw error;
 
-    // Transform snake_case to camelCase for frontend
-    const transformedWorkouts =
-      workouts?.map((workout) => ({
-        id: workout.id,
-        workoutType: workout.workout_type,
-        durationMinutes: workout.duration_minutes,
-        notes: workout.notes,
-        workoutDate: workout.workout_date,
-        createdAt: workout.created_at,
-        updatedAt: workout.updated_at,
-      })) || [];
+    if (!workouts || workouts.length === 0) {
+      return { data: [] };
+    }
 
-    return { data: transformedWorkouts };
+    // Group workouts by month
+    const monthlyGroups = {};
+
+    workouts.forEach((workout) => {
+      const date = new Date(workout.workout_date);
+      const monthKey = `${date.getFullYear()}-${String(
+        date.getMonth() + 1
+      ).padStart(2, "0")}`;
+
+      if (!monthlyGroups[monthKey]) {
+        monthlyGroups[monthKey] = {
+          month: monthKey,
+          workouts: 0,
+          duration: 0,
+        };
+      }
+
+      monthlyGroups[monthKey].workouts += 1;
+      monthlyGroups[monthKey].duration += workout.duration_minutes;
+    });
+
+    // Convert to array and sort by month
+    const monthlyData = Object.values(monthlyGroups).sort((a, b) =>
+      a.month.localeCompare(b.month)
+    );
+
+    return { data: monthlyData };
   },
 
   // Get dashboard data

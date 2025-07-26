@@ -22,7 +22,11 @@ ChartJS.register(
 );
 
 const WorkoutChart = ({ data, type = "doughnut", title }) => {
-  if (!data || (Array.isArray(data) && data.length === 0)) {
+  if (
+    !data ||
+    (Array.isArray(data) && data.length === 0) ||
+    (typeof data === "object" && Object.keys(data).length === 0)
+  ) {
     return (
       <div className="card">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
@@ -46,6 +50,11 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
   };
 
   const getDoughnutData = () => {
+    // Ensure data is an object for doughnut chart
+    if (typeof data !== "object" || Array.isArray(data)) {
+      return { labels: [], datasets: [{ data: [] }] };
+    }
+
     const labels = Object.keys(data);
     const values = Object.values(data);
     const colors = labels.map((label) => workoutTypeColors[label] || "#6b7280");
@@ -66,6 +75,11 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
   };
 
   const getBarData = () => {
+    // Ensure data is an array for bar chart
+    if (!Array.isArray(data)) {
+      return { labels: [], datasets: [{ data: [] }] };
+    }
+
     const labels = data.map((item) => {
       const date = new Date(item.month + "-01");
       return date.toLocaleDateString("en-US", {
