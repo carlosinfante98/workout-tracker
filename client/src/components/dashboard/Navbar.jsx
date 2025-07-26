@@ -6,9 +6,16 @@ import Button from "../ui/Button";
 const Navbar = () => {
   const { user, logout } = useAuthStore();
 
-  const handleLogout = () => {
-    logout();
-    window.location.href = "/";
+  const handleLogout = async () => {
+    console.log("🖱️ Logout button clicked");
+    try {
+      await logout();
+      console.log("✅ Logout completed - auth state will handle redirect");
+      // Let the auth state change trigger the redirect naturally
+      // The ProtectedRoute will redirect to "/" when user becomes null
+    } catch (error) {
+      console.error("❌ Logout failed:", error);
+    }
   };
 
   return (
@@ -24,7 +31,7 @@ const Navbar = () => {
             <div className="flex items-center space-x-2">
               <User className="w-5 h-5 text-gray-500" />
               <span className="text-gray-700 font-medium">
-                {user?.fullName}
+                {user?.user_metadata?.full_name || user?.email}
               </span>
             </div>
 
