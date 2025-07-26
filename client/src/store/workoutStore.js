@@ -23,7 +23,7 @@ export const useWorkoutStore = create((set, get) => ({
   fetchWorkouts: async (page = 1) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await workoutAPI.getAll({ page, limit: 20 });
+      const response = await workoutAPI.getWorkouts({ page, limit: 20 });
       const { workouts, pagination } = response.data;
 
       set({
@@ -79,7 +79,7 @@ export const useWorkoutStore = create((set, get) => ({
   createWorkout: async (workoutData) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await workoutAPI.create(workoutData);
+      const response = await workoutAPI.createWorkout(workoutData);
       const newWorkout = response.data.workout;
 
       // Add to current workouts list
@@ -94,8 +94,7 @@ export const useWorkoutStore = create((set, get) => ({
 
       return { success: true, workout: newWorkout };
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.error || "Failed to create workout";
+      const errorMessage = error.message || "Failed to create workout";
       set({ error: errorMessage, isLoading: false });
       return { success: false, error: errorMessage };
     }

@@ -9,7 +9,7 @@ import WorkoutChart from "../components/dashboard/WorkoutChart";
 import Button from "../components/ui/Button";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 import WelcomeDialog from "../components/ui/WelcomeDialog";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 
 const Dashboard = () => {
   const [showWorkoutForm, setShowWorkoutForm] = useState(false);
@@ -170,7 +170,24 @@ const Dashboard = () => {
                         {workout.workoutType}
                       </h4>
                       <p className="text-sm text-gray-600">
-                        {format(new Date(workout.workoutDate), "MMM d, yyyy")}
+                        {workout.workoutDate
+                          ? (() => {
+                              try {
+                                // Extract just the date part to avoid timezone issues
+                                const dateOnly =
+                                  workout.workoutDate.split("T")[0];
+                                const [year, month, day] = dateOnly.split("-");
+                                const localDate = new Date(
+                                  parseInt(year),
+                                  parseInt(month) - 1,
+                                  parseInt(day)
+                                );
+                                return format(localDate, "MMM d, yyyy");
+                              } catch (e) {
+                                return "Invalid date";
+                              }
+                            })()
+                          : "Invalid date"}
                       </p>
                     </div>
                   </div>

@@ -62,7 +62,9 @@ const WorkoutForm = ({ isOpen, onClose }) => {
     const result = await createWorkout({
       ...formData,
       durationMinutes: parseInt(formData.durationMinutes),
-      workoutDate: new Date(formData.workoutDate).toISOString(),
+      workoutDate: new Date(
+        formData.workoutDate + "T00:00:00.000Z"
+      ).toISOString(),
     });
 
     if (result.success) {
