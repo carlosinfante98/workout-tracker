@@ -135,17 +135,17 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-8 pb-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
           <div className="pr-4 w-full sm:w-auto">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
               Dashboard
             </h1>
-            <p className="text-gray-600 mt-2 sm:mt-1 text-sm sm:text-base">
+            <p className="text-gray-600 dark:text-gray-300 mt-2 sm:mt-1 text-sm sm:text-base">
               Welcome back,{" "}
               <span className="break-words">
                 {user?.user_metadata?.full_name?.split(" ")[0] ||
@@ -212,22 +212,16 @@ const Dashboard = () => {
         </div>
 
         {/* Recent Workouts with Filters */}
-        <div className="card">
-          <WorkoutFilters
-            filters={filters}
-            onFiltersChange={setFilters}
-            workoutTypeStats={stats?.workoutTypes}
-          />
-
-          <WorkoutList
-            workouts={workouts}
-            filteredWorkouts={filteredWorkouts}
-            getWorkoutTypeIcon={getWorkoutTypeIcon}
-            getWorkoutTypeColor={getWorkoutTypeColor}
-            onNewWorkout={() => setShowWorkoutForm(true)}
-            filters={filters}
-          />
-        </div>
+        <WorkoutList
+          workouts={workouts}
+          filteredWorkouts={filteredWorkouts}
+          getWorkoutTypeIcon={getWorkoutTypeIcon}
+          getWorkoutTypeColor={getWorkoutTypeColor}
+          onNewWorkout={() => setShowWorkoutForm(true)}
+          filters={filters}
+          onFiltersChange={setFilters}
+          workoutTypeStats={stats?.workoutTypes}
+        />
       </div>
 
       {/* Workout Form Modal */}

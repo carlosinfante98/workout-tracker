@@ -9,7 +9,7 @@ const LoadingSpinner = ({ size = "md", className = "" }) => {
 
   return (
     <div className={`${sizeClasses[size]} ${className}`}>
-      <div className="loading-spinner"></div>
+      <div className="loading-spinner dark:opacity-80"></div>
     </div>
   );
 };

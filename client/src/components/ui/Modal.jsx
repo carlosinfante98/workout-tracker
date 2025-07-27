@@ -30,14 +30,16 @@ const Modal = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70 p-4 animate-fade-in"
       onClick={handleBackdropClick}
     >
       <div
-        className={`bg-white rounded-lg shadow-xl w-full ${sizeClasses[size]} animate-slide-up`}
+        className={`bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full ${sizeClasses[size]} animate-slide-up border border-gray-200 dark:border-gray-700`}
       >
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+            {title}
+          </h2>
           <button
             onClick={() => {
               console.log("Modal X button clicked, canClose:", canClose);
@@ -50,15 +52,15 @@ const Modal = ({
             }}
             className={`p-2 rounded-full transition-colors ${
               canClose
-                ? "hover:bg-gray-100 text-gray-500"
-                : "text-gray-300 cursor-not-allowed"
+                ? "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400"
+                : "text-gray-300 dark:text-gray-600 cursor-not-allowed"
             }`}
             disabled={!canClose}
           >
             <X size={20} />
           </button>
         </div>
-        <div className="p-6">{children}</div>
+        <div className="p-6 bg-white dark:bg-gray-800">{children}</div>
       </div>
     </div>
   );

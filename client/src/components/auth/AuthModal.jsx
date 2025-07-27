@@ -189,7 +189,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 
         {/* Display submission errors */}
         {errors.submit && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start space-x-3 animate-shake">
+          <div className="bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 rounded-lg p-4 flex items-start space-x-3 animate-shake">
             <div className="flex-shrink-0">
               <svg
                 className="h-5 w-5 text-red-400"
@@ -204,16 +204,18 @@ const AuthModal = ({ isOpen, onClose }) => {
               </svg>
             </div>
             <div className="flex-1">
-              <h3 className="text-sm font-medium text-red-800">
+              <h3 className="text-sm font-medium text-red-800 dark:text-red-200">
                 {mode === "login" ? "Sign in failed" : "Sign up failed"}
               </h3>
               <div className="mt-1">
-                <p className="text-sm text-red-700">{errors.submit}</p>
+                <p className="text-sm text-red-700 dark:text-red-300">
+                  {errors.submit}
+                </p>
               </div>
               {mode === "login" &&
                 !errors.submit.includes("check your email") && (
                   <div className="mt-2">
-                    <p className="text-xs text-red-600">
+                    <p className="text-xs text-red-600 dark:text-red-400">
                       💡 <strong>Tip:</strong> Make sure your email and password
                       are correct, or try creating a new account.
                     </p>
@@ -234,7 +236,7 @@ const AuthModal = ({ isOpen, onClose }) => {
       </form>
 
       <div className="mt-6 text-center">
-        <span className="text-gray-600">
+        <span className="text-gray-600 dark:text-gray-300">
           {mode === "login"
             ? "Don't have an account?"
             : "Already have an account?"}
@@ -242,7 +244,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         <button
           type="button"
           onClick={switchMode}
-          className="ml-2 text-primary-500 hover:text-primary-600 font-medium"
+          className="ml-2 text-primary-500 dark:text-primary-400 hover:text-primary-600 dark:hover:text-primary-300 font-medium"
         >
           {mode === "login" ? "Sign Up" : "Sign In"}
         </button>

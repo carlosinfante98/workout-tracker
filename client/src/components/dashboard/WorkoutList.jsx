@@ -1,7 +1,8 @@
 import React from "react";
-import { Activity, Plus, Calendar, Clock, FileText } from "lucide-react";
+import { Activity, Plus, Calendar, Clock, FileText, Zap } from "lucide-react";
 import { format } from "date-fns";
 import Button from "../ui/Button";
+import WorkoutFilters from "./WorkoutFilters";
 
 const WorkoutList = ({
   workouts,
@@ -10,15 +11,109 @@ const WorkoutList = ({
   getWorkoutTypeColor,
   onNewWorkout,
   filters,
+  onFiltersChange,
+  workoutTypeStats,
 }) => {
   const workoutsToShow = filteredWorkouts || workouts;
   const isFiltered =
     filteredWorkouts && filteredWorkouts.length !== workouts.length;
 
+  // Modern softer gradient color palette (matching the chart)
+  const getModernWorkoutColor = (type) => {
+    const colors = {
+      cardio: {
+        gradient: "from-indigo-300 to-purple-400",
+        bg: "bg-gradient-to-br from-indigo-50 to-purple-50",
+        border: "border-indigo-200",
+        text: "text-indigo-700",
+        icon: "bg-gradient-to-br from-indigo-300 to-purple-400",
+      },
+      strength: {
+        gradient: "from-pink-300 to-rose-400",
+        bg: "bg-gradient-to-br from-pink-50 to-rose-50",
+        border: "border-pink-200",
+        text: "text-pink-700",
+        icon: "bg-gradient-to-br from-pink-300 to-rose-400",
+      },
+      flexibility: {
+        gradient: "from-blue-300 to-cyan-400",
+        bg: "bg-gradient-to-br from-blue-50 to-cyan-50",
+        border: "border-blue-200",
+        text: "text-blue-700",
+        icon: "bg-gradient-to-br from-blue-300 to-cyan-400",
+      },
+      sports: {
+        gradient: "from-emerald-300 to-teal-400",
+        bg: "bg-gradient-to-br from-emerald-50 to-teal-50",
+        border: "border-emerald-200",
+        text: "text-emerald-700",
+        icon: "bg-gradient-to-br from-emerald-300 to-teal-400",
+      },
+      yoga: {
+        gradient: "from-violet-300 to-purple-400",
+        bg: "bg-gradient-to-br from-violet-50 to-purple-50",
+        border: "border-violet-200",
+        text: "text-violet-700",
+        icon: "bg-gradient-to-br from-violet-300 to-purple-400",
+      },
+      gym: {
+        gradient: "from-amber-300 to-orange-400",
+        bg: "bg-gradient-to-br from-amber-50 to-orange-50",
+        border: "border-amber-200",
+        text: "text-amber-700",
+        icon: "bg-gradient-to-br from-amber-300 to-orange-400",
+      },
+      run: {
+        gradient: "from-orange-300 to-red-400",
+        bg: "bg-gradient-to-br from-orange-50 to-red-50",
+        border: "border-orange-200",
+        text: "text-orange-700",
+        icon: "bg-gradient-to-br from-orange-300 to-red-400",
+      },
+      cycling: {
+        gradient: "from-green-300 to-emerald-400",
+        bg: "bg-gradient-to-br from-green-50 to-emerald-50",
+        border: "border-green-200",
+        text: "text-green-700",
+        icon: "bg-gradient-to-br from-green-300 to-emerald-400",
+      },
+      swimming: {
+        gradient: "from-purple-300 to-indigo-400",
+        bg: "bg-gradient-to-br from-purple-50 to-indigo-50",
+        border: "border-purple-200",
+        text: "text-purple-700",
+        icon: "bg-gradient-to-br from-purple-300 to-indigo-400",
+      },
+      other: {
+        gradient: "from-gray-300 to-slate-400",
+        bg: "bg-gradient-to-br from-gray-50 to-slate-50",
+        border: "border-gray-200",
+        text: "text-gray-700",
+        icon: "bg-gradient-to-br from-gray-300 to-slate-400",
+      },
+    };
+    return colors[type] || colors.other;
+  };
+
+  const getWorkoutEmoji = (type) => {
+    const emojis = {
+      cardio: "🏃",
+      strength: "💪",
+      flexibility: "🧘",
+      sports: "⚽",
+      yoga: "🧘‍♀️",
+      gym: "🏋️",
+      run: "🏃‍♂️",
+      cycling: "🚴",
+      swimming: "🏊",
+      other: "🏃‍♂️",
+    };
+    return emojis[type] || "🏃‍♂️";
+  };
+
   const formatWorkoutDate = (workoutDate) => {
     if (!workoutDate) return "Invalid date";
     try {
-      // Extract just the date part to avoid timezone issues
       const dateOnly = workoutDate.split("T")[0];
       const [year, month, day] = dateOnly.split("-");
       const localDate = new Date(
@@ -34,37 +129,82 @@ const WorkoutList = ({
 
   if (!workoutsToShow || workoutsToShow.length === 0) {
     return (
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
-        <div className="text-center py-16">
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Activity className="w-8 h-8 text-gray-400" />
+      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+        {/* Minimalist Header */}
+        <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+          {/* Single Row Layout */}
+          <div className="px-4 sm:px-6 py-4 sm:py-5">
+            <div className="flex items-center justify-between gap-3 sm:gap-4">
+              {/* Left: Title & Info */}
+              <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
+                  <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+                    Recent Workouts
+                  </h2>
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                    {workouts.length}{" "}
+                    {workouts.length === 1 ? "workout" : "workouts"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Right: Controls - Single row with proper spacing */}
+              <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+                <WorkoutFilters
+                  filters={filters}
+                  onFiltersChange={onFiltersChange}
+                  workoutTypeStats={workoutTypeStats}
+                />
+                <Button
+                  onClick={onNewWorkout}
+                  variant="success"
+                  className="shadow-sm hover:shadow-md transition-all duration-200"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  <span className="hidden sm:inline">New Workout</span>
+                  <span className="sm:hidden">Add</span>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Empty State */}
+        <div className="text-center py-20">
+          <div className="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+            <Activity className="w-10 h-10 text-gray-500 dark:text-gray-400" />
           </div>
 
           {isFiltered ? (
             <>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                 No workouts found
               </h3>
-              <p className="text-gray-500 mb-6">
-                Try adjusting your filters to see more workouts
+              <p className="text-gray-600 dark:text-gray-300 mb-8 max-w-md mx-auto">
+                Try adjusting your filters to see more workouts, or log a new
+                one to get started
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Button onClick={onNewWorkout} variant="success">
-                  <Plus className="w-4 h-4 mr-2" />
+                <Button onClick={onNewWorkout} variant="success" size="lg">
+                  <Plus className="w-5 h-5 mr-2" />
                   Log New Workout
                 </Button>
               </div>
             </>
           ) : (
             <>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                 No workouts yet
               </h3>
-              <p className="text-gray-500 mb-6">
-                Start your fitness journey by logging your first workout
+              <p className="text-gray-600 dark:text-gray-300 mb-8 max-w-md mx-auto">
+                Start your fitness journey by logging your first workout and
+                track your progress
               </p>
-              <Button onClick={onNewWorkout} variant="success">
-                <Plus className="w-4 h-4 mr-2" />
+              <Button onClick={onNewWorkout} variant="success" size="lg">
+                <Zap className="w-5 h-5 mr-2" />
                 Log Your First Workout
               </Button>
             </>
@@ -75,108 +215,158 @@ const WorkoutList = ({
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-      {/* Header */}
-      <div className="px-4 sm:px-6 py-4 border-b border-gray-200 bg-gray-50">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center space-x-2 sm:space-x-3 flex-wrap">
-            <div className="flex items-center space-x-2">
-              <Activity className="w-5 h-5 text-primary-500" />
-              <span className="font-medium text-gray-900 text-sm sm:text-base">
-                {isFiltered
-                  ? `${workoutsToShow.length} of ${workouts.length} workouts`
-                  : `${workoutsToShow.length} workouts`}
-              </span>
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+      {/* Minimalist Header */}
+      <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        {/* Single Row Layout */}
+        <div className="px-4 sm:px-6 py-4 sm:py-5">
+          <div className="flex items-center justify-between gap-3 sm:gap-4">
+            {/* Left: Title & Info */}
+            <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
+                <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+                    Recent Workouts
+                  </h2>
+                  {isFiltered && (
+                    <span className="inline-flex items-center px-2 py-0.5 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 text-xs font-medium rounded-full">
+                      Filtered
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                  {isFiltered
+                    ? `${workoutsToShow.length} of ${workouts.length} workouts`
+                    : `${workoutsToShow.length} ${
+                        workoutsToShow.length === 1 ? "workout" : "workouts"
+                      }`}
+                </p>
+              </div>
             </div>
-            {isFiltered && (
-              <span className="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded-full">
-                Filtered
-              </span>
-            )}
+
+            {/* Right: Controls - Single row with proper spacing */}
+            <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+              <WorkoutFilters
+                filters={filters}
+                onFiltersChange={onFiltersChange}
+                workoutTypeStats={workoutTypeStats}
+              />
+              <Button
+                onClick={onNewWorkout}
+                variant="success"
+                className="shadow-sm hover:shadow-md transition-all duration-200"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">New Workout</span>
+                <span className="sm:hidden">Add</span>
+              </Button>
+            </div>
           </div>
-          <Button
-            onClick={onNewWorkout}
-            size="sm"
-            variant="success"
-            className="self-start sm:self-auto"
-          >
-            <Plus className="w-4 h-4 mr-1" />
-            <span className="hidden sm:inline">New</span>
-            <span className="sm:hidden">Add</span>
-          </Button>
+        </div>
+
+        {/* Minimal Column Headers */}
+        <div className="hidden sm:flex items-center justify-between px-4 sm:px-6 py-2 bg-gray-50 dark:bg-gray-700/30 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+          <span>Activity</span>
+          <span>Duration</span>
         </div>
       </div>
 
       {/* Workout List */}
-      <div className="divide-y divide-gray-200">
-        {workoutsToShow.slice(0, 20).map((workout, index) => (
-          <div
-            key={workout.id || index}
-            className="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200 group"
-          >
-            <div className="flex items-start justify-between gap-3">
-              {/* Left side - Icon and details */}
-              <div className="flex items-start space-x-3 sm:space-x-4 flex-1 min-w-0">
-                {/* Workout Type Icon */}
-                <div
-                  className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-white text-lg sm:text-xl shadow-sm ${getWorkoutTypeColor(
-                    workout.workoutType
-                  )} group-hover:shadow-md transition-shadow flex-shrink-0`}
-                >
-                  {getWorkoutTypeIcon(workout.workoutType)}
+      <div className="divide-y divide-gray-100">
+        {workoutsToShow.slice(0, 20).map((workout, index) => {
+          const colorConfig = getModernWorkoutColor(workout.workoutType);
+
+          return (
+            <div
+              key={workout.id || index}
+              className={`p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-300 group`}
+            >
+              <div className="flex items-start justify-between gap-4">
+                {/* Left side - Icon and details */}
+                <div className="flex items-start space-x-4 flex-1 min-w-0">
+                  {/* Workout Type Icon */}
+                  <div
+                    className={`w-14 h-14 ${colorConfig.icon} rounded-2xl flex items-center justify-center text-white text-2xl shadow-md group-hover:shadow-lg transition-all duration-300 flex-shrink-0 relative overflow-hidden`}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
+                    <span className="relative z-10">
+                      {getWorkoutEmoji(workout.workoutType)}
+                    </span>
+                  </div>
+
+                  {/* Workout Details */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <h4 className="font-bold text-gray-900 dark:text-white capitalize text-lg group-hover:text-gray-800 dark:group-hover:text-gray-200 transition-colors">
+                          {workout.workoutType}
+                        </h4>
+                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-300 mt-1">
+                          <Calendar className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
+                          <span className="font-medium">
+                            {formatWorkoutDate(workout.workoutDate)}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Duration badge - mobile version */}
+                      <div className="sm:hidden">
+                        <div className="bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-200 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-500">
+                          <div className="text-center">
+                            <div className="font-semibold text-sm">
+                              {workout.durationMinutes}
+                            </div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                              min
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {workout.notes && (
+                      <div className="flex items-start space-x-2 text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 p-3 rounded-xl group-hover:bg-white/70 dark:group-hover:bg-gray-600/70 transition-colors">
+                        <FileText className="w-4 h-4 mt-0.5 flex-shrink-0 text-gray-500 dark:text-gray-400" />
+                        <p className="line-clamp-2 break-words leading-relaxed">
+                          {workout.notes}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {/* Workout Details */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-semibold text-gray-900 capitalize text-base sm:text-lg">
-                      {workout.workoutType}
-                    </h4>
-                    {/* Duration badge - mobile version */}
-                    <div className="sm:hidden bg-gradient-to-r from-slate-500 to-slate-600 text-white px-2 py-1 rounded-lg shadow-sm">
-                      <span className="font-bold text-sm">
+                {/* Right side - Duration badge - desktop version */}
+                <div className="hidden sm:block text-right flex-shrink-0">
+                  <div className="bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-200 px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors">
+                    <div className="text-center">
+                      <div className="font-semibold text-lg">
                         {workout.durationMinutes}
-                      </span>
-                      <span className="text-xs ml-1 opacity-90">min</span>
+                      </div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                        minutes
+                      </div>
                     </div>
                   </div>
-
-                  <div className="flex items-center text-sm text-gray-600 mb-2">
-                    <Calendar className="w-4 h-4 mr-1" />
-                    <span>{formatWorkoutDate(workout.workoutDate)}</span>
-                  </div>
-
-                  {workout.notes && (
-                    <div className="flex items-start space-x-1 text-sm text-gray-600">
-                      <FileText className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                      <p className="line-clamp-2 break-words">
-                        {workout.notes}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Right side - Duration badge - desktop version */}
-              <div className="hidden sm:block text-right flex-shrink-0">
-                <div className="bg-gradient-to-r from-slate-500 to-slate-600 text-white px-3 py-1 rounded-lg shadow-sm">
-                  <span className="font-bold text-lg">
-                    {workout.durationMinutes}
-                  </span>
-                  <span className="text-xs ml-1 opacity-90">min</span>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Show more indicator */}
       {workoutsToShow.length > 20 && (
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 text-center">
-          <p className="text-sm text-gray-500">
-            Showing first 20 workouts of {workoutsToShow.length} total
-          </p>
+        <div className="px-6 py-4 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 text-center">
+          <div className="flex items-center justify-center space-x-2">
+            <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div>
+            <p className="text-sm font-medium text-gray-600">
+              Showing first 20 workouts of {workoutsToShow.length} total
+            </p>
+            <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div>
+          </div>
         </div>
       )}
     </div>

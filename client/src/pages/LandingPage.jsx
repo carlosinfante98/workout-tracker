@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Activity, Users, Trophy, TrendingUp, Play } from "lucide-react";
 import useAuthStore from "../store/authStore";
 import AuthModal from "../components/auth/AuthModal";
+import ThemeToggle from "../components/ui/ThemeToggle";
 import Button from "../components/ui/Button";
 
 const LandingPage = () => {
@@ -45,19 +46,22 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen gradient-bg">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
-              <Activity className="w-8 h-8 text-primary-500 mr-2" />
-              <h1 className="text-2xl font-bold text-gray-900">FitTracker</h1>
+              <Activity className="w-8 h-8 text-primary-500 dark:text-primary-400 mr-2" />
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                FitTracker
+              </h1>
             </div>
             <div className="flex items-center space-x-4">
+              <ThemeToggle />
               {user ? (
                 <div className="flex items-center space-x-4">
-                  <span className="text-gray-700">
+                  <span className="text-gray-700 dark:text-gray-300">
                     Welcome, {user.fullName}!
                   </span>
                   <Button
@@ -84,11 +88,13 @@ const LandingPage = () => {
       <section className="relative py-20 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
               Transform Your{" "}
-              <span className="text-primary-500">Fitness Journey</span>
+              <span className="text-primary-500 dark:text-primary-400">
+                Fitness Journey
+              </span>
             </h2>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
               Track your workouts, monitor your progress, and achieve your
               fitness goals with our comprehensive workout tracking platform.
             </p>
@@ -110,13 +116,13 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">
+            <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
               Everything You Need to Stay Fit
             </h3>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 dark:text-gray-300">
               Powerful features to help you track, analyze, and improve your
               fitness routine
             </p>
@@ -126,15 +132,17 @@ const LandingPage = () => {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="text-center p-6 rounded-lg hover:shadow-lg transition-shadow"
+                className="text-center p-6 rounded-lg hover:shadow-lg transition-shadow bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600"
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-50 rounded-lg mb-4">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-600 rounded-lg mb-4">
                   {feature.icon}
                 </div>
-                <h4 className="text-xl font-semibold text-gray-900 mb-2">
+                <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                   {feature.title}
                 </h4>
-                <p className="text-gray-600">{feature.description}</p>
+                <p className="text-gray-600 dark:text-gray-300">
+                  {feature.description}
+                </p>
               </div>
             ))}
           </div>
@@ -142,13 +150,13 @@ const LandingPage = () => {
       </section>
 
       {/* Workout Types Section */}
-      <section className="py-20 gradient-bg">
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-800 dark:to-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">
+            <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
               Support for All Workout Types
             </h3>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 dark:text-gray-300">
               Track any type of exercise with our flexible workout logging
               system
             </p>
@@ -162,7 +170,7 @@ const LandingPage = () => {
                 >
                   {workout.icon}
                 </div>
-                <h4 className="text-sm font-medium text-gray-900">
+                <h4 className="text-sm font-medium text-gray-900 dark:text-white">
                   {workout.name}
                 </h4>
               </div>
@@ -172,32 +180,38 @@ const LandingPage = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 bg-primary-500">
+      <section className="py-20 bg-primary-500 dark:bg-primary-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className="text-white">
               <div className="text-4xl font-bold mb-2">10K+</div>
-              <div className="text-primary-100">Workouts Tracked</div>
+              <div className="text-primary-100 dark:text-primary-200">
+                Workouts Tracked
+              </div>
             </div>
             <div className="text-white">
               <div className="text-4xl font-bold mb-2">500+</div>
-              <div className="text-primary-100">Active Users</div>
+              <div className="text-primary-100 dark:text-primary-200">
+                Active Users
+              </div>
             </div>
             <div className="text-white">
               <div className="text-4xl font-bold mb-2">95%</div>
-              <div className="text-primary-100">Goal Achievement</div>
+              <div className="text-primary-100 dark:text-primary-200">
+                Goal Achievement
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-gray-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h3 className="text-3xl font-bold text-gray-900 mb-6">
+          <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
             Ready to Start Your Fitness Journey?
           </h3>
-          <p className="text-lg text-gray-600 mb-8">
+          <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
             Join thousands of users who are already tracking their workouts and
             achieving their fitness goals.
           </p>
@@ -212,14 +226,14 @@ const LandingPage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-12">
+      <footer className="bg-gray-800 dark:bg-gray-900 text-white py-12 border-t border-gray-700 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
-              <Activity className="w-8 h-8 text-primary-500 mr-2" />
+              <Activity className="w-8 h-8 text-primary-500 dark:text-primary-400 mr-2" />
               <span className="text-xl font-bold">FitTracker</span>
             </div>
-            <div className="text-gray-400 text-sm">
+            <div className="text-gray-400 dark:text-gray-500 text-sm">
               © 2024 FitTracker. All rights reserved.
             </div>
           </div>

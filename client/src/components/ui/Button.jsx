@@ -16,14 +16,17 @@ const Button = ({
 
   const variants = {
     primary:
-      "bg-primary-500 hover:bg-primary-600 text-white focus:ring-primary-500",
+      "bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700 text-white focus:ring-primary-500 dark:focus:ring-primary-400",
     secondary:
-      "bg-secondary-500 hover:bg-secondary-600 text-white focus:ring-secondary-500",
+      "bg-secondary-500 hover:bg-secondary-600 dark:bg-secondary-600 dark:hover:bg-secondary-700 text-white focus:ring-secondary-500 dark:focus:ring-secondary-400",
     outline:
-      "border-2 border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-white focus:ring-primary-500",
-    ghost: "text-gray-700 hover:bg-gray-100 focus:ring-gray-500",
-    danger: "bg-red-500 hover:bg-red-600 text-white focus:ring-red-500",
-    success: "bg-green-500 hover:bg-green-600 text-white focus:ring-green-500",
+      "border-2 border-primary-500 dark:border-primary-400 text-primary-500 dark:text-primary-400 hover:bg-primary-500 dark:hover:bg-primary-600 hover:text-white dark:hover:text-white focus:ring-primary-500 dark:focus:ring-primary-400",
+    ghost:
+      "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-gray-500 dark:focus:ring-gray-400",
+    danger:
+      "bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white focus:ring-red-500 dark:focus:ring-red-400",
+    success:
+      "bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white focus:ring-emerald-500 dark:focus:ring-emerald-400",
   };
 
   const sizes = {

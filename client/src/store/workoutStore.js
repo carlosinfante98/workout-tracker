@@ -135,14 +135,15 @@ export const useWorkoutStore = create((set, get) => ({
   // Utility functions
   getWorkoutTypeIcon: (type) => {
     const icons = {
-      gym: "🏋️‍♂️",
-      run: "🏃‍♂️",
-      cardio: "💓",
+      cardio: "🏃",
       strength: "💪",
-      yoga: "🧘‍♀️",
-      cycling: "🚴‍♂️",
-      swimming: "🏊‍♂️",
+      flexibility: "🧘",
       sports: "⚽",
+      yoga: "🧘‍♀️",
+      gym: "🏋️",
+      run: "🏃‍♂️",
+      cycling: "🚴",
+      swimming: "🏊",
       other: "🏃‍♂️",
     };
     return icons[type] || "🏃‍♂️";
@@ -150,16 +151,17 @@ export const useWorkoutStore = create((set, get) => ({
 
   getWorkoutTypeColor: (type) => {
     const colors = {
-      gym: "bg-red-500",
-      run: "bg-blue-500",
-      cardio: "bg-pink-500",
-      strength: "bg-purple-500",
-      yoga: "bg-green-500",
-      cycling: "bg-yellow-500",
-      swimming: "bg-cyan-500",
-      sports: "bg-orange-500",
-      other: "bg-gray-500",
+      cardio: "bg-gradient-to-br from-indigo-300 to-purple-400",
+      strength: "bg-gradient-to-br from-pink-300 to-rose-400",
+      flexibility: "bg-gradient-to-br from-blue-300 to-cyan-400",
+      sports: "bg-gradient-to-br from-emerald-300 to-teal-400",
+      yoga: "bg-gradient-to-br from-violet-300 to-purple-400",
+      gym: "bg-gradient-to-br from-amber-300 to-orange-400",
+      run: "bg-gradient-to-br from-orange-300 to-red-400",
+      cycling: "bg-gradient-to-br from-green-300 to-emerald-400",
+      swimming: "bg-gradient-to-br from-purple-300 to-indigo-400",
+      other: "bg-gradient-to-br from-gray-300 to-slate-400",
     };
-    return colors[type] || "bg-gray-500";
+    return colors[type] || "bg-gradient-to-br from-gray-300 to-slate-400";
   },
 }));

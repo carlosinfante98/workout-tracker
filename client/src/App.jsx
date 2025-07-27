@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import useAuthStore from "./store/authStore";
+import { useThemeStore } from "./store/themeStore";
 import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Dashboard";
 import LoadingSpinner from "./components/ui/LoadingSpinner";
@@ -25,6 +26,7 @@ const PublicRoute = ({ children }) => {
 
 function App() {
   const { initialize, user, loading } = useAuthStore();
+  const { initializeTheme } = useThemeStore();
   const [isInitialized, setIsInitialized] = React.useState(false);
 
   useEffect(() => {
@@ -34,13 +36,16 @@ function App() {
       setIsInitialized(true);
     };
 
+    // Initialize theme
+    initializeTheme();
+
     initAuth();
-  }, [initialize]);
+  }, [initialize, initializeTheme]);
 
   // Show loading spinner during auth initialization
   if (!isInitialized || loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <LoadingSpinner size="lg" />
       </div>
     );
