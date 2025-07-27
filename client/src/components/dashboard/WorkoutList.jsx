@@ -276,11 +276,61 @@ const WorkoutList = ({
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
-      {/* Enhanced Header */}
-      <div className="border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-700/50">
-        {/* Main Header Row */}
-        <div className="px-4 sm:px-6 py-4 sm:py-6">
-          <div className="flex items-center justify-between gap-4">
+      {/* Mobile-Friendly Header */}
+      <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        {/* Mobile Header */}
+        <div className="sm:hidden px-4 py-4">
+          <div className="flex items-center justify-between">
+            {/* Left: Title & Icon */}
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
+                <Activity className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+                  Recent Workouts
+                </h2>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {isFiltered
+                    ? `${workoutsToShow.length} of ${workouts.length} workouts`
+                    : `${workoutsToShow.length} ${
+                        workoutsToShow.length === 1 ? "workout" : "workouts"
+                      }`}
+                </p>
+              </div>
+            </div>
+
+            {/* Right: Icon Buttons */}
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setIsMobileFilterOpen(true)}
+                className={`relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${
+                  hasActiveFilters
+                    ? "bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                }`}
+              >
+                <Filter className="w-5 h-5" />
+                {hasActiveFilters && (
+                  <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary-500 dark:bg-primary-400 rounded-full border-2 border-white dark:border-gray-800"></div>
+                )}
+              </button>
+
+              <Button
+                onClick={onNewWorkout}
+                variant="success"
+                size="sm"
+                className="w-10 h-10 p-0 rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
+              >
+                <Plus className="w-5 h-5" />
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Header */}
+        <div className="hidden sm:block px-6 py-6">
+          <div className="flex items-center justify-between">
             {/* Left: Title & Stats */}
             <div className="flex items-center space-x-4 min-w-0 flex-1">
               <div className="w-12 h-12 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0 relative overflow-hidden">
@@ -289,7 +339,7 @@ const WorkoutList = ({
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                     Recent Workouts
                   </h2>
                   {isFiltered && (
@@ -320,65 +370,44 @@ const WorkoutList = ({
             </div>
 
             {/* Right: Controls */}
-            <div className="flex items-center space-x-3 flex-shrink-0 ml-auto">
-              {/* Desktop Filters */}
-              <div className="hidden sm:block">
-                <WorkoutFilters
-                  filters={filters}
-                  onFiltersChange={onFiltersChange}
-                  workoutTypeStats={workoutTypeStats}
-                />
-              </div>
-
-              {/* Mobile Filter Button */}
-              <button
-                onClick={() => setIsMobileFilterOpen(true)}
-                className={`sm:hidden flex items-center space-x-1.5 px-3 py-2 rounded-lg transition-all duration-200 text-sm ${
-                  hasActiveFilters
-                    ? "bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400"
-                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                }`}
-              >
-                <Filter className="w-4 h-4" />
-                <span className="font-medium">Filter</span>
-                {hasActiveFilters && (
-                  <div className="w-1.5 h-1.5 bg-primary-500 dark:bg-primary-400 rounded-full ml-1"></div>
-                )}
-              </button>
-
+            <div className="flex items-center space-x-3 flex-shrink-0">
+              <WorkoutFilters
+                filters={filters}
+                onFiltersChange={onFiltersChange}
+                workoutTypeStats={workoutTypeStats}
+              />
               <Button
                 onClick={onNewWorkout}
                 variant="success"
                 className="shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
                 <Plus className="w-4 h-4 mr-2" />
-                <span className="hidden sm:inline">New Workout</span>
-                <span className="sm:hidden">Add</span>
+                New Workout
               </Button>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Enhanced Column Headers */}
-        <div className="hidden sm:flex items-center justify-between px-4 sm:px-6 py-3 bg-gray-50/80 dark:bg-gray-700/40 backdrop-blur-sm border-t border-gray-100 dark:border-gray-600/50">
-          <div className="flex items-center space-x-4">
-            <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
-              Activity
-            </span>
-            <div className="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
-            <span className="text-xs text-gray-500 dark:text-gray-400">
-              Type & Details
-            </span>
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
-              Duration
-            </span>
-            <div className="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
-            <span className="text-xs text-gray-500 dark:text-gray-400">
-              Minutes
-            </span>
-          </div>
+      {/* Enhanced Column Headers */}
+      <div className="hidden sm:flex items-center justify-between px-4 sm:px-6 py-3 bg-gray-50/80 dark:bg-gray-700/40 backdrop-blur-sm border-t border-gray-100 dark:border-gray-600/50">
+        <div className="flex items-center space-x-4">
+          <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+            Activity
+          </span>
+          <div className="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            Type & Details
+          </span>
+        </div>
+        <div className="flex items-center space-x-4">
+          <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+            Duration
+          </span>
+          <div className="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            Minutes
+          </span>
         </div>
       </div>
 
