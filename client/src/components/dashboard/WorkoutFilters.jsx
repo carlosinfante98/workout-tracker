@@ -106,7 +106,7 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
 
       {/* Expanded Filters Dropdown */}
       {isExpanded && (
-        <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-lg z-50 animate-in slide-in-from-top-1 duration-200 max-w-[calc(100vw-1rem)]">
+        <div className="absolute right-0 sm:right-0 left-0 sm:left-auto top-full mt-2 w-full sm:w-72 lg:w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-lg z-50 animate-in slide-in-from-top-1 duration-200">
           <div className="space-y-4">
             {/* Workout Type Filter */}
             <div className="space-y-3">
@@ -119,6 +119,7 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
                 onChange={(value) => handleFilterChange("type", value)}
                 options={workoutTypes}
                 placeholder="Select workout type"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
 
@@ -133,6 +134,7 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
                 onChange={(value) => handleFilterChange("duration", value)}
                 options={durationOptions}
                 placeholder="Select duration"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
 
@@ -144,10 +146,10 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
               </label>
 
               {/* Date Mode Selection */}
-              <div className="flex flex-wrap gap-2 mb-3">
+              <div className="flex flex-wrap gap-1 sm:gap-2 mb-3">
                 <button
                   onClick={() => handleFilterChange("dateMode", "all")}
-                  className={`px-2 sm:px-3 py-1 text-xs rounded-full transition-colors whitespace-nowrap ${
+                  className={`px-2 py-1 text-xs rounded-full transition-colors whitespace-nowrap ${
                     filters.dateMode === "all"
                       ? "bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300"
                       : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
@@ -157,7 +159,7 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
                 </button>
                 <button
                   onClick={() => handleFilterChange("dateMode", "single")}
-                  className={`px-2 sm:px-3 py-1 text-xs rounded-full transition-colors whitespace-nowrap ${
+                  className={`px-2 py-1 text-xs rounded-full transition-colors whitespace-nowrap ${
                     filters.dateMode === "single"
                       ? "bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300"
                       : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
@@ -167,7 +169,7 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
                 </button>
                 <button
                   onClick={() => handleFilterChange("dateMode", "range")}
-                  className={`px-2 sm:px-3 py-1 text-xs rounded-full transition-colors whitespace-nowrap ${
+                  className={`px-2 py-1 text-xs rounded-full transition-colors whitespace-nowrap ${
                     filters.dateMode === "range"
                       ? "bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300"
                       : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
@@ -186,7 +188,7 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
                     handleFilterChange("dateFrom", e.target.value);
                     handleFilterChange("dateTo", e.target.value);
                   }}
-                  className="w-full py-3 pl-3 pr-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                  className="w-full py-3 pl-3 pr-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
               )}
 
@@ -199,7 +201,7 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
                       handleFilterChange("dateFrom", e.target.value)
                     }
                     placeholder="From date"
-                    className="w-full py-3 pl-3 pr-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                    className="w-full py-3 pl-3 pr-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                   <input
                     type="date"
@@ -208,7 +210,7 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
                       handleFilterChange("dateTo", e.target.value)
                     }
                     placeholder="To date"
-                    className="w-full py-3 pl-3 pr-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                    className="w-full py-3 pl-3 pr-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 </div>
               )}
@@ -219,15 +221,15 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
           {hasActiveFilters && (
             <div className="mt-6 pt-4 border-t border-gray-200">
               <p className="text-sm text-gray-600 mb-2">Active filters:</p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1 sm:gap-2">
                 {filters.type && (
-                  <span className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                  <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
                     Type:{" "}
                     {workoutTypes.find((t) => t.value === filters.type)?.label}
                   </span>
                 )}
                 {filters.duration && (
-                  <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                  <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">
                     Duration:{" "}
                     {
                       durationOptions.find((d) => d.value === filters.duration)
@@ -236,7 +238,7 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
                   </span>
                 )}
                 {filters.dateFrom && (
-                  <span className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">
+                  <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">
                     📅{" "}
                     {filters.dateMode === "single"
                       ? format(new Date(filters.dateFrom), "MMM d")
@@ -255,21 +257,21 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
 
       {/* Quick Filter Chips (always visible) */}
       {!isExpanded && hasActiveFilters && (
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-1 sm:gap-2 mb-4">
           {filters.type && (
-            <span className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+            <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
               {workoutTypes.find((t) => t.value === filters.type)?.icon}{" "}
               {workoutTypes.find((t) => t.value === filters.type)?.label}
             </span>
           )}
           {filters.duration && (
-            <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+            <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">
               ⏱️{" "}
               {durationOptions.find((d) => d.value === filters.duration)?.label}
             </span>
           )}
           {filters.dateFrom && (
-            <span className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">
+            <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">
               📅{" "}
               {filters.dateMode === "single"
                 ? format(new Date(filters.dateFrom), "MMM d")

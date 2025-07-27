@@ -130,29 +130,30 @@ const WorkoutList = ({
   if (!workoutsToShow || workoutsToShow.length === 0) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
-        {/* Minimalist Header */}
-        <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-          {/* Single Row Layout */}
-          <div className="px-4 sm:px-6 py-4 sm:py-5">
-            <div className="flex items-center justify-between gap-3 sm:gap-4">
-              {/* Left: Title & Info */}
-              <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
-                  <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+        {/* Enhanced Header */}
+        <div className="border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-700/50">
+          {/* Main Header Row */}
+          <div className="px-4 sm:px-6 py-4 sm:py-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              {/* Left: Title & Stats */}
+              <div className="flex items-center space-x-4 min-w-0 flex-1">
+                <div className="w-12 h-12 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
+                  <Activity className="w-6 h-6 text-white relative z-10" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                     Recent Workouts
                   </h2>
-                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 font-medium mt-1">
                     {workouts.length}{" "}
                     {workouts.length === 1 ? "workout" : "workouts"}
                   </p>
                 </div>
               </div>
 
-              {/* Right: Controls - Single row with proper spacing */}
-              <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+              {/* Right: Controls */}
+              <div className="flex items-center space-x-3 flex-shrink-0">
                 <WorkoutFilters
                   filters={filters}
                   onFiltersChange={onFiltersChange}
@@ -161,7 +162,7 @@ const WorkoutList = ({
                 <Button
                   onClick={onNewWorkout}
                   variant="success"
-                  className="shadow-sm hover:shadow-md transition-all duration-200"
+                  className="shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   <span className="hidden sm:inline">New Workout</span>
@@ -216,39 +217,51 @@ const WorkoutList = ({
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
-      {/* Minimalist Header */}
-      <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-        {/* Single Row Layout */}
-        <div className="px-4 sm:px-6 py-4 sm:py-5">
-          <div className="flex items-center justify-between gap-3 sm:gap-4">
-            {/* Left: Title & Info */}
-            <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
-                <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+      {/* Enhanced Header */}
+      <div className="border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-700/50">
+        {/* Main Header Row */}
+        <div className="px-4 sm:px-6 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            {/* Left: Title & Stats */}
+            <div className="flex items-center space-x-4 min-w-0 flex-1">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
+                <Activity className="w-6 h-6 text-white relative z-10" />
               </div>
               <div className="min-w-0 flex-1">
-                <div className="flex items-center space-x-2 sm:space-x-3">
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                     Recent Workouts
                   </h2>
                   {isFiltered && (
-                    <span className="inline-flex items-center px-2 py-0.5 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 text-xs font-medium rounded-full">
+                    <span className="inline-flex items-center px-3 py-1 bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 text-sm font-medium rounded-full border border-primary-200 dark:border-primary-800">
+                      <div className="w-2 h-2 bg-primary-500 rounded-full mr-2"></div>
                       Filtered
                     </span>
                   )}
                 </div>
-                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                  {isFiltered
-                    ? `${workoutsToShow.length} of ${workouts.length} workouts`
-                    : `${workoutsToShow.length} ${
-                        workoutsToShow.length === 1 ? "workout" : "workouts"
-                      }`}
-                </p>
+                <div className="flex items-center space-x-4 mt-1 sm:mt-2">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 font-medium">
+                    {isFiltered
+                      ? `${workoutsToShow.length} of ${workouts.length} workouts`
+                      : `${workoutsToShow.length} ${
+                          workoutsToShow.length === 1 ? "workout" : "workouts"
+                        }`}
+                  </p>
+                  {workoutsToShow.length > 0 && (
+                    <div className="hidden sm:flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
+                      <div className="w-1 h-1 bg-gray-400 dark:bg-gray-500 rounded-full"></div>
+                      <span>
+                        Last updated: {format(new Date(), "MMM d, h:mm a")}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
-            {/* Right: Controls - Single row with proper spacing */}
-            <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+            {/* Right: Controls */}
+            <div className="flex items-center space-x-3 flex-shrink-0">
               <WorkoutFilters
                 filters={filters}
                 onFiltersChange={onFiltersChange}
@@ -257,7 +270,7 @@ const WorkoutList = ({
               <Button
                 onClick={onNewWorkout}
                 variant="success"
-                className="shadow-sm hover:shadow-md transition-all duration-200"
+                className="shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 <span className="hidden sm:inline">New Workout</span>
@@ -267,10 +280,26 @@ const WorkoutList = ({
           </div>
         </div>
 
-        {/* Minimal Column Headers */}
-        <div className="hidden sm:flex items-center justify-between px-4 sm:px-6 py-2 bg-gray-50 dark:bg-gray-700/30 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-          <span>Activity</span>
-          <span>Duration</span>
+        {/* Enhanced Column Headers */}
+        <div className="hidden sm:flex items-center justify-between px-4 sm:px-6 py-3 bg-gray-50/80 dark:bg-gray-700/40 backdrop-blur-sm border-t border-gray-100 dark:border-gray-600/50">
+          <div className="flex items-center space-x-4">
+            <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+              Activity
+            </span>
+            <div className="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              Type & Details
+            </span>
+          </div>
+          <div className="flex items-center space-x-4">
+            <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+              Duration
+            </span>
+            <div className="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              Minutes
+            </span>
+          </div>
         </div>
       </div>
 

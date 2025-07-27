@@ -141,7 +141,7 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-8 pb-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
-          <div className="pr-4 w-full sm:w-auto">
+          <div className="w-full sm:w-auto">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
               Dashboard
             </h1>
@@ -158,7 +158,7 @@ const Dashboard = () => {
           <Button
             onClick={() => setShowWorkoutForm(true)}
             variant="success"
-            className="mt-4 sm:mt-0"
+            className="mt-4 sm:mt-0 ml-auto sm:ml-0"
           >
             <Plus className="w-4 h-4 mr-2" />
             <span className="hidden sm:inline">Log Workout</span>

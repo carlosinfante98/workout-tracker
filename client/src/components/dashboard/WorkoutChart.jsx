@@ -28,13 +28,15 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
     (typeof data === "object" && Object.keys(data).length === 0)
   ) {
     return (
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
-        <h3 className="text-xl font-bold text-gray-900 mb-6">{title}</h3>
-        <div className="flex items-center justify-center h-64 text-gray-500">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
+          {title}
+        </h3>
+        <div className="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
           <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
               <svg
-                className="w-8 h-8 text-gray-400"
+                className="w-8 h-8 text-gray-400 dark:text-gray-500"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -47,10 +49,10 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
                 />
               </svg>
             </div>
-            <p className="text-sm font-medium text-gray-600">
+            <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
               No data available
             </p>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
               Start logging workouts to see your distribution
             </p>
           </div>
@@ -59,57 +61,67 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
     );
   }
 
-  // Modern gradient color palette
+  // Modern soft color palette for light and dark modes
   const workoutTypeColors = {
     cardio: {
-      gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-      solid: "#667eea",
+      gradient: "linear-gradient(135deg, #818cf8 0%, #a78bfa 100%)",
+      solid: "#818cf8",
       light: "#f0f3ff",
+      dark: "#6366f1",
     },
     strength: {
-      gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-      solid: "#f093fb",
+      gradient: "linear-gradient(135deg, #f472b6 0%, #ec4899 100%)",
+      solid: "#f472b6",
       light: "#fef7ff",
+      dark: "#db2777",
     },
     flexibility: {
-      gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-      solid: "#4facfe",
+      gradient: "linear-gradient(135deg, #60a5fa 0%, #06b6d4 100%)",
+      solid: "#60a5fa",
       light: "#f0fdff",
+      dark: "#2563eb",
     },
     sports: {
-      gradient: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
-      solid: "#43e97b",
+      gradient: "linear-gradient(135deg, #34d399 0%, #10b981 100%)",
+      solid: "#34d399",
       light: "#f0fff4",
+      dark: "#059669",
     },
     yoga: {
-      gradient: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
-      solid: "#fa709a",
+      gradient: "linear-gradient(135deg, #f97316 0%, #f59e0b 100%)",
+      solid: "#f97316",
       light: "#fff9f0",
+      dark: "#ea580c",
     },
     gym: {
-      gradient: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-      solid: "#a8edea",
+      gradient: "linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%)",
+      solid: "#a78bfa",
       light: "#f8ffff",
+      dark: "#7c3aed",
     },
     run: {
-      gradient: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
-      solid: "#fcb69f",
+      gradient: "linear-gradient(135deg, #fb7185 0%, #f43f5e 100%)",
+      solid: "#fb7185",
       light: "#fff8f0",
+      dark: "#e11d48",
     },
     cycling: {
-      gradient: "linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)",
-      solid: "#84fab0",
+      gradient: "linear-gradient(135deg, #4ade80 0%, #22c55e 100%)",
+      solid: "#4ade80",
       light: "#f8fffe",
+      dark: "#16a34a",
     },
     swimming: {
-      gradient: "linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)",
-      solid: "#a18cd1",
+      gradient: "linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)",
+      solid: "#06b6d4",
       light: "#faf8ff",
+      dark: "#0e7490",
     },
     other: {
-      gradient: "linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%)",
-      solid: "#fad0c4",
+      gradient: "linear-gradient(135deg, #94a3b8 0%, #64748b 100%)",
+      solid: "#94a3b8",
       light: "#fffaff",
+      dark: "#475569",
     },
   };
 
@@ -136,9 +148,12 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
 
     const labels = Object.keys(data);
     const values = Object.values(data);
-    const colors = labels.map(
-      (label) => workoutTypeColors[label]?.solid || "#6b7280"
-    );
+    const colors = labels.map((label) => {
+      const colorConfig = workoutTypeColors[label];
+      return isDarkMode
+        ? colorConfig?.dark || "#6b7280"
+        : colorConfig?.solid || "#6b7280";
+    });
 
     return {
       labels: labels.map(
@@ -148,7 +163,7 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
         {
           data: values,
           backgroundColor: colors,
-          borderColor: "#ffffff",
+          borderColor: isDarkMode ? "#374151" : "#ffffff",
           borderWidth: 3,
           hoverBackgroundColor: colors.map((color) => color + "E6"),
           hoverBorderWidth: 4,
@@ -177,8 +192,10 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
         {
           label: "Workouts",
           data: data.map((item) => item.workouts),
-          backgroundColor: "rgba(59, 130, 246, 0.8)",
-          borderColor: "#3b82f6",
+          backgroundColor: isDarkMode
+            ? "rgba(129, 140, 248, 0.8)"
+            : "rgba(99, 102, 241, 0.8)",
+          borderColor: isDarkMode ? "#818cf8" : "#6366f1",
           borderWidth: 2,
           borderRadius: 8,
           borderSkipped: false,
@@ -186,8 +203,10 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
         {
           label: "Duration (hours)",
           data: data.map((item) => Math.round(item.duration / 60)),
-          backgroundColor: "rgba(16, 185, 129, 0.8)",
-          borderColor: "#10b981",
+          backgroundColor: isDarkMode
+            ? "rgba(52, 211, 153, 0.8)"
+            : "rgba(34, 197, 94, 0.8)",
+          borderColor: isDarkMode ? "#34d399" : "#22c55e",
           borderWidth: 2,
           borderRadius: 8,
           borderSkipped: false,
@@ -203,6 +222,9 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
     return 0;
   };
 
+  // Check if dark mode is active
+  const isDarkMode = document.documentElement.classList.contains("dark");
+
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -214,6 +236,7 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
         labels: {
           padding: 20,
           usePointStyle: true,
+          color: isDarkMode ? "#d1d5db" : "#374151",
           font: {
             size: 13,
             weight: "500",
@@ -221,10 +244,14 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
         },
       },
       tooltip: {
-        backgroundColor: "rgba(0, 0, 0, 0.8)",
-        titleColor: "white",
-        bodyColor: "white",
-        borderColor: "rgba(255, 255, 255, 0.1)",
+        backgroundColor: isDarkMode
+          ? "rgba(31, 41, 55, 0.95)"
+          : "rgba(0, 0, 0, 0.8)",
+        titleColor: isDarkMode ? "#f9fafb" : "white",
+        bodyColor: isDarkMode ? "#d1d5db" : "white",
+        borderColor: isDarkMode
+          ? "rgba(75, 85, 99, 0.3)"
+          : "rgba(255, 255, 255, 0.1)",
         borderWidth: 1,
         cornerRadius: 12,
         displayColors: true,
@@ -252,6 +279,7 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
             display: false,
           },
           ticks: {
+            color: isDarkMode ? "#9ca3af" : "#6b7280",
             font: {
               size: 12,
               weight: "500",
@@ -261,9 +289,12 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
         y: {
           beginAtZero: true,
           grid: {
-            color: "rgba(0, 0, 0, 0.05)",
+            color: isDarkMode
+              ? "rgba(156, 163, 175, 0.1)"
+              : "rgba(0, 0, 0, 0.05)",
           },
           ticks: {
+            color: isDarkMode ? "#9ca3af" : "#6b7280",
             font: {
               size: 12,
               weight: "500",
@@ -287,12 +318,18 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
     const dataEntries = Object.entries(data || {});
 
     return (
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold text-gray-900">{title}</h3>
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+            {title}
+          </h3>
           <div className="text-right">
-            <p className="text-2xl font-bold text-gray-900">{totalWorkouts}</p>
-            <p className="text-sm text-gray-500">Total Workouts</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              {totalWorkouts}
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Total Workouts
+            </p>
           </div>
         </div>
 
@@ -305,10 +342,12 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
               {/* Center Label */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div className="text-center">
-                  <p className="text-3xl font-bold text-gray-900">
+                  <p className="text-3xl font-bold text-gray-900 dark:text-white">
                     {totalWorkouts}
                   </p>
-                  <p className="text-sm text-gray-500 font-medium">Workouts</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                    Workouts
+                  </p>
                 </div>
               </div>
             </div>
@@ -327,7 +366,7 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
               return (
                 <div
                   key={type}
-                  className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                  className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   <div className="flex items-center space-x-3">
                     <div
@@ -335,13 +374,17 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
                       style={{ backgroundColor: colorConfig.solid }}
                     ></div>
                     <span className="text-2xl">{getWorkoutIcon(type)}</span>
-                    <span className="font-medium text-gray-900 capitalize">
+                    <span className="font-medium text-gray-900 dark:text-white capitalize">
                       {type}
                     </span>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-gray-900">{count}</p>
-                    <p className="text-xs text-gray-500">{percentage}%</p>
+                    <p className="font-bold text-gray-900 dark:text-white">
+                      {count}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      {percentage}%
+                    </p>
                   </div>
                 </div>
               );
@@ -353,8 +396,10 @@ const WorkoutChart = ({ data, type = "doughnut", title }) => {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
-      <h3 className="text-xl font-bold text-gray-900 mb-6">{title}</h3>
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
+        {title}
+      </h3>
       <div className="chart-container-modern">
         <Bar data={chartData} options={chartOptions} />
       </div>
