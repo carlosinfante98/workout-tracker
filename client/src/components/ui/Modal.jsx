@@ -19,40 +19,33 @@ const Modal = ({
   };
 
   const handleBackdropClick = (e) => {
-    console.log("Modal backdrop clicked, canClose:", canClose);
     if (e.target === e.currentTarget && canClose) {
-      console.log("Modal closing via backdrop");
       onClose();
-    } else if (e.target === e.currentTarget && !canClose) {
-      console.log("Modal close blocked by canClose=false");
     }
   };
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70 p-4 animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/70 p-4 animate-fade-in"
       onClick={handleBackdropClick}
     >
       <div
-        className={`bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full ${sizeClasses[size]} animate-slide-up border border-gray-200 dark:border-gray-700`}
+        className={`bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-h-[90vh] overflow-hidden ${sizeClasses[size]} animate-slide-up border border-gray-200 dark:border-gray-700`}
       >
+        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             {title}
           </h2>
           <button
             onClick={() => {
-              console.log("Modal X button clicked, canClose:", canClose);
               if (canClose) {
-                console.log("Modal closing via X button");
                 onClose();
-              } else {
-                console.log("Modal close blocked by canClose=false");
               }
             }}
-            className={`p-2 rounded-full transition-colors ${
+            className={`p-2 rounded-xl transition-all duration-200 ${
               canClose
-                ? "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400"
+                ? "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                 : "text-gray-300 dark:text-gray-600 cursor-not-allowed"
             }`}
             disabled={!canClose}
@@ -60,7 +53,11 @@ const Modal = ({
             <X size={20} />
           </button>
         </div>
-        <div className="p-6 bg-white dark:bg-gray-800">{children}</div>
+
+        {/* Content */}
+        <div className="p-6 bg-white dark:bg-gray-800 overflow-y-auto max-h-[calc(90vh-120px)]">
+          {children}
+        </div>
       </div>
     </div>
   );
