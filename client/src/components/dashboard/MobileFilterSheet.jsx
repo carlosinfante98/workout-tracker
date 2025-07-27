@@ -25,6 +25,19 @@ const MobileFilterSheet = ({
     setLocalFilters(filters);
   }, [filters]);
 
+  // Prevent body scrolling when filter sheet is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
+
   const workoutTypes = [
     { value: "", label: "All Types", icon: "🏃" },
     { value: "cardio", label: "Cardio", icon: "🏃" },
@@ -88,14 +101,14 @@ const MobileFilterSheet = ({
       />
 
       {/* Bottom Sheet */}
-      <div className="relative w-full bg-white dark:bg-gray-800 rounded-t-3xl shadow-2xl transform transition-transform duration-300 ease-out max-h-[90vh] overflow-hidden">
+      <div className="relative w-full bg-white dark:bg-gray-800 rounded-t-3xl shadow-2xl transform transition-transform duration-300 ease-out max-h-[90vh] flex flex-col">
         {/* Handle */}
-        <div className="flex justify-center pt-4 pb-2">
+        <div className="flex justify-center pt-4 pb-2 flex-shrink-0">
           <div className="w-12 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
         </div>
 
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center">
@@ -120,7 +133,7 @@ const MobileFilterSheet = ({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
+        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6 min-h-0">
           {/* Workout Type Filter */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
@@ -261,7 +274,7 @@ const MobileFilterSheet = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex-shrink-0">
           <div className="flex space-x-3">
             <Button
               onClick={clearFilters}

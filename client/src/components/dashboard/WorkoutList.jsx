@@ -28,6 +28,9 @@ const WorkoutList = ({
   const isFiltered =
     filteredWorkouts && filteredWorkouts.length !== workouts.length;
 
+  const hasActiveFilters =
+    filters.type || filters.duration || filters.dateFrom || filters.dateTo;
+
   // Modern softer gradient color palette (matching the chart)
   const getModernWorkoutColor = (type) => {
     const colors = {
@@ -140,11 +143,58 @@ const WorkoutList = ({
   if (!workoutsToShow || workoutsToShow.length === 0) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
-        {/* Enhanced Header */}
-        <div className="border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-700/50">
-          {/* Main Header Row */}
-          <div className="px-4 sm:px-6 py-4 sm:py-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        {/* Mobile-Friendly Header */}
+        <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+          {/* Mobile Header */}
+          <div className="sm:hidden px-4 py-3">
+            <div className="flex items-center justify-between">
+              {/* Left: Compact Title */}
+              <div className="flex items-center space-x-3 min-w-0 flex-1">
+                <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center shadow-sm flex-shrink-0">
+                  <Activity className="w-4 h-4 text-white" />
+                </div>
+                <div className="min-w-0">
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-white truncate">
+                    Recent Workouts
+                  </h2>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {workouts.length}{" "}
+                    {workouts.length === 1 ? "workout" : "workouts"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Right: Compact Controls */}
+              <div className="flex items-center space-x-2 flex-shrink-0">
+                <button
+                  onClick={() => setIsMobileFilterOpen(true)}
+                  className={`flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200 ${
+                    hasActiveFilters
+                      ? "bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400"
+                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  }`}
+                >
+                  <Filter className="w-5 h-5" />
+                  {hasActiveFilters && (
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-primary-500 dark:bg-primary-400 rounded-full"></div>
+                  )}
+                </button>
+
+                <Button
+                  onClick={onNewWorkout}
+                  variant="success"
+                  size="sm"
+                  className="shadow-sm hover:shadow-md transition-all duration-200"
+                >
+                  <Plus className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Header */}
+          <div className="hidden sm:block px-6 py-6">
+            <div className="flex items-center justify-between">
               {/* Left: Title & Stats */}
               <div className="flex items-center space-x-4 min-w-0 flex-1">
                 <div className="w-12 h-12 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0 relative overflow-hidden">
@@ -152,7 +202,7 @@ const WorkoutList = ({
                   <Activity className="w-6 h-6 text-white relative z-10" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                     Recent Workouts
                   </h2>
                   <p className="text-sm text-gray-600 dark:text-gray-300 font-medium mt-1">
@@ -164,39 +214,18 @@ const WorkoutList = ({
 
               {/* Right: Controls */}
               <div className="flex items-center space-x-3 flex-shrink-0">
-                {/* Desktop Filters */}
-                <div className="hidden sm:block">
-                  <WorkoutFilters
-                    filters={filters}
-                    onFiltersChange={onFiltersChange}
-                    workoutTypeStats={workoutTypeStats}
-                  />
-                </div>
-
-                {/* Mobile Filter Button */}
-                <button
-                  onClick={() => setIsMobileFilterOpen(true)}
-                  className={`sm:hidden flex items-center space-x-1.5 px-3 py-2 rounded-lg transition-all duration-200 text-sm ${
-                    hasActiveFilters
-                      ? "bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400"
-                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  }`}
-                >
-                  <Filter className="w-4 h-4" />
-                  <span className="font-medium">Filter</span>
-                  {hasActiveFilters && (
-                    <div className="w-1.5 h-1.5 bg-primary-500 dark:bg-primary-400 rounded-full ml-1"></div>
-                  )}
-                </button>
-
+                <WorkoutFilters
+                  filters={filters}
+                  onFiltersChange={onFiltersChange}
+                  workoutTypeStats={workoutTypeStats}
+                />
                 <Button
                   onClick={onNewWorkout}
                   variant="success"
                   className="shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  <span className="hidden sm:inline">New Workout</span>
-                  <span className="sm:hidden">Add</span>
+                  New Workout
                 </Button>
               </div>
             </div>
@@ -251,7 +280,7 @@ const WorkoutList = ({
       <div className="border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-700/50">
         {/* Main Header Row */}
         <div className="px-4 sm:px-6 py-4 sm:py-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center justify-between gap-4">
             {/* Left: Title & Stats */}
             <div className="flex items-center space-x-4 min-w-0 flex-1">
               <div className="w-12 h-12 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0 relative overflow-hidden">
@@ -291,7 +320,7 @@ const WorkoutList = ({
             </div>
 
             {/* Right: Controls */}
-            <div className="flex items-center space-x-3 flex-shrink-0">
+            <div className="flex items-center space-x-3 flex-shrink-0 ml-auto">
               {/* Desktop Filters */}
               <div className="hidden sm:block">
                 <WorkoutFilters
