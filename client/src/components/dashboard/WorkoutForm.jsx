@@ -95,24 +95,31 @@ const WorkoutForm = ({ isOpen, onClose }) => {
     <Modal isOpen={isOpen} onClose={handleClose} title="Log New Workout">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Workout Type <span className="text-red-500">*</span>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Workout Type{" "}
+            <span className="text-red-500 dark:text-red-400">*</span>
           </label>
           <select
             name="workoutType"
             value={formData.workoutType}
             onChange={handleInputChange}
-            className="input-field"
+            className="input-field bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-primary-500 dark:focus:ring-primary-400"
             required
           >
             {workoutTypes.map((type) => (
-              <option key={type.value} value={type.value}>
+              <option
+                key={type.value}
+                value={type.value}
+                className="bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              >
                 {type.label}
               </option>
             ))}
           </select>
           {errors.workoutType && (
-            <p className="mt-1 text-sm text-red-600">{errors.workoutType}</p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+              {errors.workoutType}
+            </p>
           )}
         </div>
 
@@ -139,7 +146,7 @@ const WorkoutForm = ({ isOpen, onClose }) => {
         />
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Notes (optional)
           </label>
           <textarea
@@ -147,7 +154,7 @@ const WorkoutForm = ({ isOpen, onClose }) => {
             value={formData.notes}
             onChange={handleInputChange}
             rows="3"
-            className="input-field resize-none"
+            className="input-field resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-primary-500 dark:focus:ring-primary-400 placeholder-gray-500 dark:placeholder-gray-400"
             placeholder="Add any notes about your workout..."
           />
         </div>

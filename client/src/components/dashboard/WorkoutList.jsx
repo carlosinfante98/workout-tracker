@@ -1,8 +1,17 @@
-import React from "react";
-import { Activity, Plus, Calendar, Clock, FileText, Zap } from "lucide-react";
+import React, { useState } from "react";
+import {
+  Activity,
+  Plus,
+  Calendar,
+  Clock,
+  FileText,
+  Zap,
+  Filter,
+} from "lucide-react";
 import { format } from "date-fns";
 import Button from "../ui/Button";
 import WorkoutFilters from "./WorkoutFilters";
+import MobileFilterSheet from "./MobileFilterSheet";
 
 const WorkoutList = ({
   workouts,
@@ -14,6 +23,7 @@ const WorkoutList = ({
   onFiltersChange,
   workoutTypeStats,
 }) => {
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const workoutsToShow = filteredWorkouts || workouts;
   const isFiltered =
     filteredWorkouts && filteredWorkouts.length !== workouts.length;
@@ -154,11 +164,31 @@ const WorkoutList = ({
 
               {/* Right: Controls */}
               <div className="flex items-center space-x-3 flex-shrink-0">
-                <WorkoutFilters
-                  filters={filters}
-                  onFiltersChange={onFiltersChange}
-                  workoutTypeStats={workoutTypeStats}
-                />
+                {/* Desktop Filters */}
+                <div className="hidden sm:block">
+                  <WorkoutFilters
+                    filters={filters}
+                    onFiltersChange={onFiltersChange}
+                    workoutTypeStats={workoutTypeStats}
+                  />
+                </div>
+
+                {/* Mobile Filter Button */}
+                <button
+                  onClick={() => setIsMobileFilterOpen(true)}
+                  className={`sm:hidden flex items-center space-x-1.5 px-3 py-2 rounded-lg transition-all duration-200 text-sm ${
+                    hasActiveFilters
+                      ? "bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400"
+                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  }`}
+                >
+                  <Filter className="w-4 h-4" />
+                  <span className="font-medium">Filter</span>
+                  {hasActiveFilters && (
+                    <div className="w-1.5 h-1.5 bg-primary-500 dark:bg-primary-400 rounded-full ml-1"></div>
+                  )}
+                </button>
+
                 <Button
                   onClick={onNewWorkout}
                   variant="success"
@@ -262,11 +292,31 @@ const WorkoutList = ({
 
             {/* Right: Controls */}
             <div className="flex items-center space-x-3 flex-shrink-0">
-              <WorkoutFilters
-                filters={filters}
-                onFiltersChange={onFiltersChange}
-                workoutTypeStats={workoutTypeStats}
-              />
+              {/* Desktop Filters */}
+              <div className="hidden sm:block">
+                <WorkoutFilters
+                  filters={filters}
+                  onFiltersChange={onFiltersChange}
+                  workoutTypeStats={workoutTypeStats}
+                />
+              </div>
+
+              {/* Mobile Filter Button */}
+              <button
+                onClick={() => setIsMobileFilterOpen(true)}
+                className={`sm:hidden flex items-center space-x-1.5 px-3 py-2 rounded-lg transition-all duration-200 text-sm ${
+                  hasActiveFilters
+                    ? "bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                }`}
+              >
+                <Filter className="w-4 h-4" />
+                <span className="font-medium">Filter</span>
+                {hasActiveFilters && (
+                  <div className="w-1.5 h-1.5 bg-primary-500 dark:bg-primary-400 rounded-full ml-1"></div>
+                )}
+              </button>
+
               <Button
                 onClick={onNewWorkout}
                 variant="success"
@@ -398,6 +448,15 @@ const WorkoutList = ({
           </div>
         </div>
       )}
+
+      {/* Mobile Filter Sheet */}
+      <MobileFilterSheet
+        isOpen={isMobileFilterOpen}
+        onClose={() => setIsMobileFilterOpen(false)}
+        filters={filters}
+        onFiltersChange={onFiltersChange}
+        workoutTypeStats={workoutTypeStats}
+      />
     </div>
   );
 };
