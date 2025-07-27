@@ -146,49 +146,49 @@ const WorkoutList = ({
         {/* Mobile-Friendly Header */}
         <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
           {/* Mobile Header */}
-          <div className="sm:hidden px-4 py-3">
-            <div className="flex items-center justify-between">
-              {/* Left: Compact Title */}
-              <div className="flex items-center space-x-3 min-w-0 flex-1">
-                <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center shadow-sm flex-shrink-0">
-                  <Activity className="w-4 h-4 text-white" />
-                </div>
-                <div className="min-w-0">
-                  <h2 className="text-lg font-bold text-gray-900 dark:text-white truncate">
-                    Recent Workouts
-                  </h2>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {workouts.length}{" "}
-                    {workouts.length === 1 ? "workout" : "workouts"}
-                  </p>
-                </div>
+          <div className="sm:hidden px-4 py-4">
+            {/* Title Row */}
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center shadow-sm flex-shrink-0">
+                <Activity className="w-4 h-4 text-white" />
               </div>
-
-              {/* Right: Compact Controls */}
-              <div className="flex items-center space-x-2 flex-shrink-0">
-                <button
-                  onClick={() => setIsMobileFilterOpen(true)}
-                  className={`flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200 ${
-                    hasActiveFilters
-                      ? "bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400"
-                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  }`}
-                >
-                  <Filter className="w-5 h-5" />
-                  {hasActiveFilters && (
-                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-primary-500 dark:bg-primary-400 rounded-full"></div>
-                  )}
-                </button>
-
-                <Button
-                  onClick={onNewWorkout}
-                  variant="success"
-                  size="sm"
-                  className="shadow-sm hover:shadow-md transition-all duration-200"
-                >
-                  <Plus className="w-4 h-4" />
-                </Button>
+              <div className="min-w-0 flex-1">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+                  Recent Workouts
+                </h2>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {workouts.length}{" "}
+                  {workouts.length === 1 ? "workout" : "workouts"}
+                </p>
               </div>
+            </div>
+
+            {/* Controls Row */}
+            <div className="flex items-center justify-end space-x-3">
+              <button
+                onClick={() => setIsMobileFilterOpen(true)}
+                className={`flex items-center justify-center px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium ${
+                  hasActiveFilters
+                    ? "bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 border border-primary-200 dark:border-primary-800"
+                    : "text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600"
+                }`}
+              >
+                <Filter className="w-4 h-4 mr-2" />
+                Filter
+                {hasActiveFilters && (
+                  <div className="ml-2 w-2 h-2 bg-primary-500 dark:bg-primary-400 rounded-full"></div>
+                )}
+              </button>
+
+              <Button
+                onClick={onNewWorkout}
+                variant="success"
+                size="sm"
+                className="shadow-sm hover:shadow-md transition-all duration-200"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add
+              </Button>
             </div>
           </div>
 
