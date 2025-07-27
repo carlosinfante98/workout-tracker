@@ -8,29 +8,26 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { format } from "date-fns";
+import CustomSelect from "../ui/CustomSelect";
 
 const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const workoutTypes = [
-    { value: "", label: "All Types", icon: "🏃‍♂️" },
-    { value: "gym", label: "Gym", icon: "🏋️‍♂️" },
-    { value: "run", label: "Running", icon: "🏃‍♂️" },
-    { value: "cardio", label: "Cardio", icon: "💓" },
+    { value: "", label: "All Types", icon: "🏃" },
+    { value: "cardio", label: "Cardio", icon: "🏃" },
     { value: "strength", label: "Strength", icon: "💪" },
-    { value: "yoga", label: "Yoga", icon: "🧘‍♀️" },
-    { value: "cycling", label: "Cycling", icon: "🚴‍♂️" },
-    { value: "swimming", label: "Swimming", icon: "🏊‍♂️" },
+    { value: "flexibility", label: "Flexibility", icon: "🧘" },
     { value: "sports", label: "Sports", icon: "⚽" },
-    { value: "other", label: "Other", icon: "🏃‍♂️" },
+    { value: "other", label: "Other", icon: "🏋️" },
   ];
 
   const durationOptions = [
     { value: "", label: "Any Duration" },
-    { value: "0-30", label: "Under 30 min" },
-    { value: "30-60", label: "30-60 min" },
-    { value: "60-90", label: "60-90 min" },
-    { value: "90+", label: "90+ min" },
+    { value: "0-30", label: "0-30 minutes" },
+    { value: "30-60", label: "30-60 minutes" },
+    { value: "60-90", label: "60-90 minutes" },
+    { value: "90+", label: "90+ minutes" },
   ];
 
   const handleFilterChange = (key, value) => {
@@ -41,11 +38,10 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
     onFiltersChange({
       type: "",
       duration: "",
+      dateMode: "all",
       dateFrom: "",
       dateTo: "",
-      dateMode: "all", // all, single, range
     });
-    setIsExpanded(false);
   };
 
   const hasActiveFilters =
@@ -54,28 +50,28 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
   return (
     <div className="mb-6">
       {/* Filter Toggle Button */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <h3 className="text-lg font-semibold text-gray-900">Recent Workouts</h3>
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2 sm:space-x-3">
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="flex items-center space-x-1 px-3 py-1 text-xs bg-red-100 text-red-700 rounded-full hover:bg-red-200 transition-colors"
+              className="flex items-center space-x-1 px-2 sm:px-3 py-1 text-xs bg-red-100 text-red-700 rounded-full hover:bg-red-200 transition-colors"
             >
               <X className="w-3 h-3" />
-              <span>Clear</span>
+              <span className="hidden sm:inline">Clear</span>
             </button>
           )}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
+            className={`flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 text-sm ${
               isExpanded || hasActiveFilters
                 ? "bg-primary-100 text-primary-700 border border-primary-200"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
             <Filter className="w-4 h-4" />
-            <span className="text-sm font-medium">Filters</span>
+            <span className="font-medium">Filters</span>
             <ChevronDown
               className={`w-4 h-4 transition-transform duration-200 ${
                 isExpanded ? "rotate-180" : ""
@@ -87,25 +83,20 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
 
       {/* Expanded Filters */}
       {isExpanded && (
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-4 animate-in slide-in-from-top-1 duration-200">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 shadow-sm mb-4 animate-in slide-in-from-top-1 duration-200">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             {/* Workout Type Filter */}
             <div className="space-y-3">
               <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
                 <Dumbbell className="w-4 h-4" />
                 <span>Workout Type</span>
               </label>
-              <select
+              <CustomSelect
                 value={filters.type}
-                onChange={(e) => handleFilterChange("type", e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-              >
-                {workoutTypes.map((type) => (
-                  <option key={type.value} value={type.value}>
-                    {type.icon} {type.label}
-                  </option>
-                ))}
-              </select>
+                onChange={(value) => handleFilterChange("type", value)}
+                options={workoutTypes}
+                placeholder="Select workout type"
+              />
             </div>
 
             {/* Duration Filter */}
@@ -114,17 +105,12 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
                 <Clock className="w-4 h-4" />
                 <span>Duration</span>
               </label>
-              <select
+              <CustomSelect
                 value={filters.duration}
-                onChange={(e) => handleFilterChange("duration", e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-              >
-                {durationOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                onChange={(value) => handleFilterChange("duration", value)}
+                options={durationOptions}
+                placeholder="Select duration"
+              />
             </div>
 
             {/* Date Filter */}
@@ -135,10 +121,10 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
               </label>
 
               {/* Date Mode Selection */}
-              <div className="flex space-x-2 mb-3">
+              <div className="flex flex-wrap gap-2 mb-3">
                 <button
                   onClick={() => handleFilterChange("dateMode", "all")}
-                  className={`px-3 py-1 text-xs rounded-full transition-colors ${
+                  className={`px-2 sm:px-3 py-1 text-xs rounded-full transition-colors whitespace-nowrap ${
                     filters.dateMode === "all"
                       ? "bg-primary-100 text-primary-700"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -148,7 +134,7 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
                 </button>
                 <button
                   onClick={() => handleFilterChange("dateMode", "single")}
-                  className={`px-3 py-1 text-xs rounded-full transition-colors ${
+                  className={`px-2 sm:px-3 py-1 text-xs rounded-full transition-colors whitespace-nowrap ${
                     filters.dateMode === "single"
                       ? "bg-primary-100 text-primary-700"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -158,7 +144,7 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
                 </button>
                 <button
                   onClick={() => handleFilterChange("dateMode", "range")}
-                  className={`px-3 py-1 text-xs rounded-full transition-colors ${
+                  className={`px-2 sm:px-3 py-1 text-xs rounded-full transition-colors whitespace-nowrap ${
                     filters.dateMode === "range"
                       ? "bg-primary-100 text-primary-700"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -177,7 +163,7 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
                     handleFilterChange("dateFrom", e.target.value);
                     handleFilterChange("dateTo", e.target.value);
                   }}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                  className="w-full py-3 pl-3 pr-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                 />
               )}
 
@@ -190,7 +176,7 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
                       handleFilterChange("dateFrom", e.target.value)
                     }
                     placeholder="From date"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                    className="w-full py-3 pl-3 pr-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                   />
                   <input
                     type="date"
@@ -199,7 +185,7 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
                       handleFilterChange("dateTo", e.target.value)
                     }
                     placeholder="To date"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                    className="w-full py-3 pl-3 pr-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                   />
                 </div>
               )}
@@ -228,20 +214,14 @@ const WorkoutFilters = ({ filters, onFiltersChange, workoutTypeStats }) => {
                 )}
                 {filters.dateFrom && (
                   <span className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">
+                    📅{" "}
                     {filters.dateMode === "single"
-                      ? `Date: ${format(
-                          new Date(filters.dateFrom),
-                          "MMM d, yyyy"
-                        )}`
-                      : `From: ${format(
-                          new Date(filters.dateFrom),
-                          "MMM d, yyyy"
-                        )}`}
-                  </span>
-                )}
-                {filters.dateTo && filters.dateMode === "range" && (
-                  <span className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">
-                    To: {format(new Date(filters.dateTo), "MMM d, yyyy")}
+                      ? format(new Date(filters.dateFrom), "MMM d")
+                      : `${format(new Date(filters.dateFrom), "MMM d")} - ${
+                          filters.dateTo
+                            ? format(new Date(filters.dateTo), "MMM d")
+                            : "..."
+                        }`}
                   </span>
                 )}
               </div>

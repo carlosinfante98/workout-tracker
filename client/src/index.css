@@ -151,6 +151,28 @@
   }
 }
 
+/* Modern chart container for high-res displays */
+.chart-container-modern {
+  position: relative;
+  height: 320px;
+  width: 100%;
+  canvas {
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .chart-container-modern {
+    height: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .chart-container-modern {
+    height: 240px;
+  }
+}
+
 /* Add shake animation for error states */
 @keyframes shake {
   0%,

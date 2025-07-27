@@ -49,10 +49,7 @@ const WorkoutList = ({
                 Try adjusting your filters to see more workouts
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Button
-                  onClick={onNewWorkout}
-                  className="bg-primary-500 hover:bg-primary-600"
-                >
+                <Button onClick={onNewWorkout} variant="success">
                   <Plus className="w-4 h-4 mr-2" />
                   Log New Workout
                 </Button>
@@ -66,10 +63,7 @@ const WorkoutList = ({
               <p className="text-gray-500 mb-6">
                 Start your fitness journey by logging your first workout
               </p>
-              <Button
-                onClick={onNewWorkout}
-                className="bg-primary-500 hover:bg-primary-600"
-              >
+              <Button onClick={onNewWorkout} variant="success">
                 <Plus className="w-4 h-4 mr-2" />
                 Log Your First Workout
               </Button>
@@ -83,12 +77,12 @@ const WorkoutList = ({
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+      <div className="px-4 sm:px-6 py-4 border-b border-gray-200 bg-gray-50">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center space-x-2 sm:space-x-3 flex-wrap">
             <div className="flex items-center space-x-2">
               <Activity className="w-5 h-5 text-primary-500" />
-              <span className="font-medium text-gray-900">
+              <span className="font-medium text-gray-900 text-sm sm:text-base">
                 {isFiltered
                   ? `${workoutsToShow.length} of ${workouts.length} workouts`
                   : `${workoutsToShow.length} workouts`}
@@ -103,10 +97,12 @@ const WorkoutList = ({
           <Button
             onClick={onNewWorkout}
             size="sm"
-            className="bg-primary-500 hover:bg-primary-600"
+            variant="success"
+            className="self-start sm:self-auto"
           >
             <Plus className="w-4 h-4 mr-1" />
-            New
+            <span className="hidden sm:inline">New</span>
+            <span className="sm:hidden">Add</span>
           </Button>
         </div>
       </div>
@@ -116,40 +112,38 @@ const WorkoutList = ({
         {workoutsToShow.slice(0, 20).map((workout, index) => (
           <div
             key={workout.id || index}
-            className="p-6 hover:bg-gray-50 transition-colors duration-200 group"
+            className="p-4 sm:p-6 hover:bg-gray-50 transition-colors duration-200 group"
           >
-            <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between gap-3">
               {/* Left side - Icon and details */}
-              <div className="flex items-start space-x-4 flex-1">
+              <div className="flex items-start space-x-3 sm:space-x-4 flex-1 min-w-0">
                 {/* Workout Type Icon */}
                 <div
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center text-white text-xl shadow-sm ${getWorkoutTypeColor(
+                  className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-white text-lg sm:text-xl shadow-sm ${getWorkoutTypeColor(
                     workout.workoutType
-                  )} group-hover:shadow-md transition-shadow`}
+                  )} group-hover:shadow-md transition-shadow flex-shrink-0`}
                 >
                   {getWorkoutTypeIcon(workout.workoutType)}
                 </div>
 
                 {/* Workout Details */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center space-x-3 mb-2">
-                    <h4 className="font-semibold text-gray-900 capitalize text-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-semibold text-gray-900 capitalize text-base sm:text-lg">
                       {workout.workoutType}
                     </h4>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                      {workout.durationMinutes} min
-                    </span>
+                    {/* Duration badge - mobile version */}
+                    <div className="sm:hidden bg-gradient-to-r from-slate-500 to-slate-600 text-white px-2 py-1 rounded-lg shadow-sm">
+                      <span className="font-bold text-sm">
+                        {workout.durationMinutes}
+                      </span>
+                      <span className="text-xs ml-1 opacity-90">min</span>
+                    </div>
                   </div>
 
-                  <div className="flex items-center space-x-4 text-sm text-gray-600 mb-3">
-                    <div className="flex items-center space-x-1">
-                      <Calendar className="w-4 h-4" />
-                      <span>{formatWorkoutDate(workout.workoutDate)}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Clock className="w-4 h-4" />
-                      <span>{workout.durationMinutes} minutes</span>
-                    </div>
+                  <div className="flex items-center text-sm text-gray-600 mb-2">
+                    <Calendar className="w-4 h-4 mr-1" />
+                    <span>{formatWorkoutDate(workout.workoutDate)}</span>
                   </div>
 
                   {workout.notes && (
@@ -163,9 +157,9 @@ const WorkoutList = ({
                 </div>
               </div>
 
-              {/* Right side - Duration badge */}
-              <div className="text-right ml-4 flex-shrink-0">
-                <div className="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-3 py-1 rounded-lg shadow-sm">
+              {/* Right side - Duration badge - desktop version */}
+              <div className="hidden sm:block text-right flex-shrink-0">
+                <div className="bg-gradient-to-r from-slate-500 to-slate-600 text-white px-3 py-1 rounded-lg shadow-sm">
                   <span className="font-bold text-lg">
                     {workout.durationMinutes}
                   </span>
